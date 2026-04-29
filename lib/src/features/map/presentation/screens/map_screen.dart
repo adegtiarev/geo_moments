@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:geo_moments/src/core/ui/app_radius.dart';
 import 'package:geo_moments/src/core/ui/app_spacing.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,11 @@ import '../../../../core/ui/app_breakpoints.dart';
 import '../widgets/map_placeholder_panel.dart';
 
 class MapScreen extends StatelessWidget {
+  @Preview(
+    name: 'MapScreen - phone',
+    size: Size(300, 600),
+    brightness: Brightness.light,
+  )
   const MapScreen({super.key});
 
   @override

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 
 import '../../../../core/ui/app_radius.dart';
 
 class MapPlaceholderPanel extends StatelessWidget {
+  @Preview(
+    name: 'Map placeholder - phone',
+    size: Size(390, 300),
+    brightness: Brightness.light,
+  )
   const MapPlaceholderPanel({super.key});
 
   @override
