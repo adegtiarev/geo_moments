@@ -21,6 +21,8 @@
 
 ### 01. Project Foundation
 
+Статус: done.
+
 Flutter темы:
 
 - структура Flutter-приложения;
@@ -39,6 +41,8 @@ Flutter темы:
 - пройти `flutter analyze`.
 
 ### 02. Design System, Theme, Responsive Basics
+
+Статус: next.
 
 Flutter темы:
 

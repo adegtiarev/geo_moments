@@ -13,8 +13,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutePaths.map,
     routes: [
-      GoRoute(path: AppRoutePaths.map, builder: (context, state) => const MapScreen()),
-      GoRoute(path: AppRoutePaths.settings, builder: (context, state) => const SettingsScreen()),
+      GoRoute(
+        path: AppRoutePaths.map,
+        builder: (context, state) => const MapScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePaths.settings,
+        builder: (context, state) => const SettingsScreen(),
+      ),
     ],
   );
 });

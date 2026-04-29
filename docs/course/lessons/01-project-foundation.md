@@ -147,8 +147,17 @@ return MaterialApp.router(
 1. Приложение стартует.
 2. `MaterialApp.router` спрашивает `GoRouter`: "какой экран показать для текущего path?"
 3. Для `/` router строит `MapScreen`.
-4. Если вызвать `context.go('/settings')`, router меняет path.
-5. `MaterialApp.router` перестраивает нужный экран.
+4. Если вызвать `context.push('/settings')`, router кладет `SettingsScreen` поверх текущего экрана.
+5. Системная Back-кнопка снимает верхний экран и возвращает пользователя на карту.
+
+Важно различать два способа перехода:
+
+```dart
+context.go('/settings');   // заменить текущую location
+context.push('/settings'); // открыть новый экран поверх текущего
+```
+
+Для кнопки Settings в app bar нам нужен `push`, потому что пользователь ожидает вернуться назад на карту. Для auth redirect позже чаще будет использоваться `go`, потому что экран авторизации должен заменить недоступный экран, а не лечь поверх него.
 
 ## 3. Почему router делаем через Riverpod provider
 
@@ -613,7 +622,7 @@ class MapScreen extends StatelessWidget {
         actions: [
           IconButton(
             tooltip: 'Settings',
-            onPressed: () => context.go(AppRoutePaths.settings),
+            onPressed: () => context.push(AppRoutePaths.settings),
             icon: const Icon(Icons.settings_outlined),
           ),
         ],
@@ -641,7 +650,7 @@ class MapScreen extends StatelessWidget {
 Что здесь важно:
 
 - экран пока dumb UI, без business logic;
-- переход в settings идет через `context.go(...)`;
+- переход в settings идет через `context.push(...)`, чтобы системная Back-кнопка вернула пользователя на карту;
 - цвета берутся из темы, не из случайных `Colors.*`;
 - `SafeArea` защищает контент от status bar/notch/system gestures;
 - placeholder занимает место будущей карты.
@@ -751,9 +760,21 @@ flutter run
 
 Решение: обернуть app в `ProviderScope`, в том числе в widget tests.
 
+### Ошибка: системная Back-кнопка закрывает приложение вместо возврата на карту
+
+Причина: для перехода с карты в настройки использован `context.go(...)`. Он заменяет текущую location и не создает ожидаемый экран в back stack.
+
+Решение: для app bar settings button использовать:
+
+```dart
+context.push(AppRoutePaths.settings)
+```
+
+`context.go(...)` оставим для случаев, где нужно заменить текущий route: auth redirect, logout, переключение корневых разделов.
+
 ### Ошибка: `No GoRouter found in context`
 
-Причина: экран с `context.go(...)` тестируется без `MaterialApp.router`/router.
+Причина: экран с `context.push(...)` тестируется без `MaterialApp.router`/router.
 
 Решение: в обычном app flow экран должен строиться через `GeoMomentsApp`. Для изолированных widget tests позже будем использовать test router или mock shell.
 
@@ -791,4 +812,3 @@ flutter run
 - проходят ли анализатор и тесты.
 
 Если будет ошибка, разберем ее как учебный материал, а не просто "починим строку".
-

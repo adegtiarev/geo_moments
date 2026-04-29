@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppTheme {
-
   static const _seedColor = Color(0xFF2E7D6B);
 
   static ThemeData get light {
@@ -31,7 +30,7 @@ abstract final class AppTheme {
         centerTitle: false,
         backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
-      )
+      ),
     );
   }
 }

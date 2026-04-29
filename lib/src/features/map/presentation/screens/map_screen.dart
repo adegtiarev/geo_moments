@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:geo_moments/src/core/ui/app_radius.dart';
+import 'package:geo_moments/src/core/ui/app_spacing.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/app_router.dart';
+import '../../../../core/ui/app_breakpoints.dart';
+import '../widgets/map_placeholder_panel.dart';
 
 class MapScreen extends StatelessWidget {
   const MapScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Geo Moments'),
         actions: [
           IconButton(
-            tooltip: 'settings',
+            tooltip: 'Settings',
             onPressed: () => context.push(AppRoutePaths.settings),
             icon: const Icon(Icons.settings_outlined),
           ),
@@ -23,15 +25,88 @@ class MapScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: colorScheme.outlineVariant),
-            ),
-            child: const Center(child: Text('Map placeholder')),
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isTablet = AppBreakpoints.isTabletWidth(
+                constraints.maxWidth,
+              );
+              if (isTablet) {
+                return const _TabletMapLayout();
+              }
+
+              return const _PhoneMapLayout();
+            },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PhoneMapLayout extends StatelessWidget {
+  const _PhoneMapLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(AppSpacing.md),
+      child: Column(
+        children: [
+          Expanded(child: MapPlaceholderPanel()),
+          SizedBox(height: AppSpacing.md),
+          _NearbyMomentsSummary(),
+        ],
+      ),
+    );
+  }
+}
+
+class _TabletMapLayout extends StatelessWidget {
+  const _TabletMapLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      child: Row(
+        children: [
+          Expanded(flex: 3, child: MapPlaceholderPanel()),
+          SizedBox(width: AppSpacing.lg),
+          SizedBox(width: 320, child: _NearbyMomentsSummary()),
+        ],
+      ),
+    );
+  }
+}
+
+class _NearbyMomentsSummary extends StatelessWidget {
+  const _NearbyMomentsSummary();
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        border: Border.all(color: colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Nearby moments', style: textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'Moments around you will appear here.',
+              style: textTheme.bodyMedium,
+            ),
+          ],
         ),
       ),
     );

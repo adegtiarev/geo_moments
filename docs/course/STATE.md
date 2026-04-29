@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `01-project-foundation`
+Текущая стадия: `02-design-system-theme-responsive-basics`
 
-Проект находится в процессе первой главы. Пользователь начал практику: добавлены зависимости `flutter_riverpod` и `go_router`, созданы файлы под `lib/src/...`, но новые файлы пока пустые, а активный `lib/main.dart` все еще содержит counter-template.
+Глава 1 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme и двумя экранами: map placeholder и settings placeholder.
 
 ## Уже сделано
 
@@ -17,19 +17,21 @@
 - Выбраны базовые архитектурные решения.
 - Переработан стандарт уроков: теперь главы должны объяснять понятия подробно, с примерами кода и частыми ошибками.
 - Глава 1 переписана в подробный учебный формат.
+- Реализована глава 1: counter-template удален, app root вынесен в `lib/src/app/app.dart`, router вынесен в `app_router.dart`, тема вынесена в `app_theme.dart`.
+- Исправлен переход в настройки: используется `context.push(...)`, чтобы системная Back-кнопка возвращала на карту.
+- Проверки главы 1 проходили: `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: [01 Project Foundation](lessons/01-project-foundation.md)
+Текущая глава: [02 Design System, Theme, Responsive Basics](lessons/02-design-system-theme-responsive-basics.md)
 
-Цель главы: заменить counter-шаблон на минимальный production-oriented каркас приложения:
+Цель главы: превратить базовые темы и placeholder UI в управляемую дизайн-основу приложения:
 
-- структура `lib/src/...`;
-- `ProviderScope`;
-- `MaterialApp.router`;
-- базовая навигация через `go_router`;
-- стартовые темы;
-- первый home screen без backend;
+- добавить `ThemeMode` state через Riverpod;
+- сделать ручное переключение light/dark/system в settings;
+- выделить design tokens: spacing, radius, breakpoints;
+- сделать главный экран адаптивным для phone/tablet и portrait/landscape;
+- сохранить проект в рабочем состоянии;
 - проверка `flutter analyze` и запуск.
 
 ## Правило продолжения в новом чате
@@ -46,10 +48,13 @@
 ## Последняя известная структура проекта
 
 ```text
-lib/main.dart              counter template + ProviderScope, требует переписывания по главе 1
-lib/src/app/...            файлы созданы, но пустые
-lib/src/features/...       файлы созданы, но пустые
-pubspec.yaml               добавлены flutter_riverpod и go_router
+lib/main.dart              entrypoint с ProviderScope
+lib/src/app/app.dart       GeoMomentsApp с MaterialApp.router
+lib/src/app/router/...     GoRouter routes: / и /settings
+lib/src/app/theme/...      AppTheme light/dark
+lib/src/features/map/...   MapScreen с placeholder и переходом в settings через push
+lib/src/features/settings  SettingsScreen placeholder
+pubspec.yaml               flutter_riverpod и go_router подключены
 docs/course/...            документация курса
 ```
 

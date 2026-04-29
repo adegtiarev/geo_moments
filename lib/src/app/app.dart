@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geo_moments/src/app/router/app_router.dart';
 import 'package:geo_moments/src/app/theme/app_theme.dart';
+import 'package:geo_moments/src/app/theme/theme_mode_controller.dart';
 
 class GeoMomentsApp extends ConsumerWidget {
   const GeoMomentsApp({super.key});
@@ -9,13 +10,14 @@ class GeoMomentsApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeModeControllerProvider);
 
     return MaterialApp.router(
       title: 'Geo Moments',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       routerConfig: router,
     );
   }
