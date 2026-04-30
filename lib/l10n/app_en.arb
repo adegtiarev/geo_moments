@@ -1,0 +1,67 @@
+{
+  "@@locale": "en",
+  "appTitle": "Geo Moments",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "mapTitle": "Geo Moments",
+  "@mapTitle": {
+    "description": "Main map screen app bar title"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  "settingsTooltip": "Settings",
+  "@settingsTooltip": {
+    "description": "Tooltip for the settings button"
+  },
+  "mapPlaceholder": "Map placeholder",
+  "@mapPlaceholder": {
+    "description": "Temporary placeholder text for the future map"
+  },
+  "nearbyMomentsTitle": "Nearby moments",
+  "@nearbyMomentsTitle": {
+    "description": "Title for the nearby moments summary panel"
+  },
+  "nearbyMomentsEmpty": "Moments around you will appear here.",
+  "@nearbyMomentsEmpty": {
+    "description": "Empty state text for nearby moments"
+  },
+  "themeSettingTitle": "Theme",
+  "@themeSettingTitle": {
+    "description": "Settings row title for theme selection"
+  },
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "System theme mode option"
+  },
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Light theme mode option"
+  },
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Dark theme mode option"
+  },
+  "languageSettingTitle": "Language",
+  "@languageSettingTitle": {
+    "description": "Settings row title for language selection"
+  },
+  "languageSystem": "System",
+  "@languageSystem": {
+    "description": "System language option"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language option"
+  },
+  "languageRussian": "Russian",
+  "@languageRussian": {
+    "description": "Russian language option"
+  },
+  "languageSpanish": "Spanish",
+  "@languageSpanish": {
+    "description": "Spanish language option"
+  }
+}

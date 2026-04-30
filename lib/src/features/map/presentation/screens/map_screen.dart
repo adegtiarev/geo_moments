@@ -4,6 +4,7 @@ import 'package:geo_moments/src/core/ui/app_radius.dart';
 import 'package:geo_moments/src/core/ui/app_spacing.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../../core/ui/app_breakpoints.dart';
 import '../widgets/map_placeholder_panel.dart';
@@ -20,10 +21,10 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Geo Moments'),
+        title: Text(context.l10n.mapTitle),
         actions: [
           IconButton(
-            tooltip: 'Settings',
+            tooltip: context.l10n.settingsTooltip,
             onPressed: () => context.push(AppRoutePaths.settings),
             icon: const Icon(Icons.settings_outlined),
           ),
@@ -106,12 +107,9 @@ class _NearbyMomentsSummary extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Nearby moments', style: textTheme.titleMedium),
+            Text(context.l10n.nearbyMomentsTitle, style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
-            Text(
-              'Moments around you will appear here.',
-              style: textTheme.bodyMedium,
-            ),
+            Text(context.l10n.nearbyMomentsEmpty, style: textTheme.bodyMedium),
           ],
         ),
       ),

@@ -42,7 +42,7 @@ Flutter темы:
 
 ### 02. Design System, Theme, Responsive Basics
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -60,6 +60,8 @@ Flutter темы:
 - подготовить карту как главный экран с placeholder.
 
 ### 03. Localization
+
+Статус: next.
 
 Flutter темы:
 

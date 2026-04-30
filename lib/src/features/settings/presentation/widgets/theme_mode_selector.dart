@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geo_moments/src/app/theme/theme_mode_controller.dart';
 
+import '../../../../app/localization/app_localizations_context.dart';
+
 class ThemeModeSelector extends ConsumerWidget {
   const ThemeModeSelector({super.key});
 
@@ -10,20 +12,20 @@ class ThemeModeSelector extends ConsumerWidget {
     final themeMode = ref.watch(themeModeControllerProvider);
 
     return SegmentedButton<ThemeMode>(
-      segments: const [
+      segments: [
         ButtonSegment(
           value: ThemeMode.system,
-          label: Text('System'),
+          label: Text(context.l10n.themeSystem),
           icon: Icon(Icons.brightness_auto_outlined),
         ),
         ButtonSegment(
           value: ThemeMode.light,
-          label: Text('Light'),
+          label: Text(context.l10n.themeLight),
           icon: Icon(Icons.light_mode_outlined),
         ),
         ButtonSegment(
           value: ThemeMode.dark,
-          label: Text('Dark'),
+          label: Text(context.l10n.themeDark),
           icon: Icon(Icons.dark_mode_outlined),
         ),
       ],

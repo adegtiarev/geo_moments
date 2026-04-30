@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
+import 'package:geo_moments/src/app/localization/app_localizations_context.dart';
 
 import '../../../../core/ui/app_radius.dart';
 
@@ -23,7 +24,7 @@ class MapPlaceholderPanel extends StatelessWidget {
         border: Border.all(color: colorScheme.outlineVariant),
       ),
       child: Center(
-        child: Text('Map placeholder', style: textTheme.titleMedium),
+        child: Text(context.l10n.mapPlaceholder, style: textTheme.titleMedium),
       ),
     );
   }

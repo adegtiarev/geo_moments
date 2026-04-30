@@ -1,0 +1,19 @@
+{
+  "@@locale": "es",
+  "appTitle": "Geo Moments",
+  "mapTitle": "Geo Moments",
+  "settingsTitle": "Configuración",
+  "settingsTooltip": "Configuración",
+  "mapPlaceholder": "Aquí estará el mapa",
+  "nearbyMomentsTitle": "Momentos cercanos",
+  "nearbyMomentsEmpty": "Aquí aparecerán los momentos cercanos.",
+  "themeSettingTitle": "Tema",
+  "themeSystem": "Sistema",
+  "themeLight": "Claro",
+  "themeDark": "Oscuro",
+  "languageSettingTitle": "Idioma",
+  "languageSystem": "Sistema",
+  "languageEnglish": "Inglés",
+  "languageRussian": "Ruso",
+  "languageSpanish": "Español"
+}

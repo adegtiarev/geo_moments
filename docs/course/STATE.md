@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `02-design-system-theme-responsive-basics`
+Текущая стадия: `03-localization`
 
-Глава 1 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme и двумя экранами: map placeholder и settings placeholder.
+Глава 2 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, responsive map placeholder layout и widget previews для map feature components.
 
 ## Уже сделано
 
@@ -20,19 +20,23 @@
 - Реализована глава 1: counter-template удален, app root вынесен в `lib/src/app/app.dart`, router вынесен в `app_router.dart`, тема вынесена в `app_theme.dart`.
 - Исправлен переход в настройки: используется `context.push(...)`, чтобы системная Back-кнопка возвращала на карту.
 - Проверки главы 1 проходили: `flutter analyze`, `flutter test`.
+- Реализована глава 2: добавлен `ThemeModeController`, selector темы в настройках, `AppSpacing`, `AppRadius`, `AppBreakpoints`, responsive `MapScreen`.
+- Добавлены widget previews для map feature components.
+- Проверки главы 2 проходили: `flutter analyze`, `flutter test`; ручная проверка переключения темы выполнена.
 
 ## Следующая глава
 
-Текущая глава: [02 Design System, Theme, Responsive Basics](lessons/02-design-system-theme-responsive-basics.md)
+Текущая глава: [03 Localization](lessons/03-localization.md)
 
-Цель главы: превратить базовые темы и placeholder UI в управляемую дизайн-основу приложения:
+Цель главы: добавить полноценную локализацию UI на английский, русский и испанский:
 
-- добавить `ThemeMode` state через Riverpod;
-- сделать ручное переключение light/dark/system в settings;
-- выделить design tokens: spacing, radius, breakpoints;
-- сделать главный экран адаптивным для phone/tablet и portrait/landscape;
+- подключить `flutter_localizations` и `intl`;
+- настроить `gen-l10n` через `l10n.yaml`;
+- добавить ARB-файлы `en`, `ru`, `es`;
+- заменить hardcoded UI text на `AppLocalizations`;
+- добавить ручное переключение языка в settings;
 - сохранить проект в рабочем состоянии;
-- проверка `flutter analyze` и запуск.
+- проверка `flutter analyze`, `flutter test` и ручная проверка переключения языка.
 
 ## Правило продолжения в новом чате
 
@@ -52,8 +56,10 @@ lib/main.dart              entrypoint с ProviderScope
 lib/src/app/app.dart       GeoMomentsApp с MaterialApp.router
 lib/src/app/router/...     GoRouter routes: / и /settings
 lib/src/app/theme/...      AppTheme light/dark
-lib/src/features/map/...   MapScreen с placeholder и переходом в settings через push
-lib/src/features/settings  SettingsScreen placeholder
+lib/src/app/theme/...      ThemeModeController
+lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
+lib/src/features/map/...   responsive MapScreen, MapPlaceholderPanel, previews
+lib/src/features/settings  SettingsScreen с ThemeModeSelector
 pubspec.yaml               flutter_riverpod и go_router подключены
 docs/course/...            документация курса
 ```
