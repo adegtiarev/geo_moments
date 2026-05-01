@@ -63,5 +63,19 @@
   "languageSpanish": "Spanish",
   "@languageSpanish": {
     "description": "Spanish language option"
+  },
+  "backendSettingTitle": "Backend",
+  "@backendSettingTitle": {
+    "description": "Settings section title for backend status"
+  },
+  "backendConfigured": "Supabase configured: {host}",
+  "@backendConfigured": {
+    "description": "Backend status text with Supabase host",
+    "placeholders": {
+      "host": {
+        "type": "String",
+        "example": "example.supabase.co"
+      }
+    }
   }
 }

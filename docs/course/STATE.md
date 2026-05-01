@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `03-localization`
+Текущая стадия: `04-supabase-project-and-environment-config`
 
-Глава 2 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, responsive map placeholder layout и widget previews для map feature components.
+Глава 3 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, responsive map placeholder layout, widget previews, локализацию EN/RU/ES и ручной переключатель языка.
 
 ## Уже сделано
 
@@ -23,20 +23,24 @@
 - Реализована глава 2: добавлен `ThemeModeController`, selector темы в настройках, `AppSpacing`, `AppRadius`, `AppBreakpoints`, responsive `MapScreen`.
 - Добавлены widget previews для map feature components.
 - Проверки главы 2 проходили: `flutter analyze`, `flutter test`; ручная проверка переключения темы выполнена.
+- Реализована глава 3: добавлены `flutter_localizations`, `intl`, `l10n.yaml`, ARB-файлы EN/RU/ES, generated localizations, `LocaleController`, `LocaleSelector`.
+- Hardcoded UI strings текущих экранов заменены на `context.l10n`.
+- Проверки главы 3 проходили: `flutter gen-l10n`, `flutter analyze`, `flutter test`; ручная проверка переключения языка выполнена.
 
 ## Следующая глава
 
-Текущая глава: [03 Localization](lessons/03-localization.md)
+Текущая глава: [04 Supabase Project and Environment Config](lessons/04-supabase-project-and-environment-config.md)
 
-Цель главы: добавить полноценную локализацию UI на английский, русский и испанский:
+Цель главы: подключить Supabase SDK и безопасный runtime config без реализации auth/data features:
 
-- подключить `flutter_localizations` и `intl`;
-- настроить `gen-l10n` через `l10n.yaml`;
-- добавить ARB-файлы `en`, `ru`, `es`;
-- заменить hardcoded UI text на `AppLocalizations`;
-- добавить ручное переключение языка в settings;
+- создать Supabase project вручную в dashboard;
+- добавить `supabase_flutter` и `flutter_dotenv`;
+- добавить `.env.example` и локальный `.env`;
+- инициализировать Supabase до `runApp`;
+- создать typed app config;
+- добавить health-check provider/screen section в Settings;
 - сохранить проект в рабочем состоянии;
-- проверка `flutter analyze`, `flutter test` и ручная проверка переключения языка.
+- проверка `flutter analyze`, `flutter test`, ручная проверка Supabase connection.
 
 ## Правило продолжения в новом чате
 
@@ -57,10 +61,13 @@ lib/src/app/app.dart       GeoMomentsApp с MaterialApp.router
 lib/src/app/router/...     GoRouter routes: / и /settings
 lib/src/app/theme/...      AppTheme light/dark
 lib/src/app/theme/...      ThemeModeController
+lib/src/app/localization   LocaleController, context.l10n
+lib/src/generated/l10n     generated AppLocalizations
+lib/l10n                   ARB-файлы EN/RU/ES
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/map/...   responsive MapScreen, MapPlaceholderPanel, previews
-lib/src/features/settings  SettingsScreen с ThemeModeSelector
-pubspec.yaml               flutter_riverpod и go_router подключены
+lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
+pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl подключены
 docs/course/...            документация курса
 ```
 

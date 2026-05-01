@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geo_moments/src/app/bootstrap/bootstrap.dart';
 
-import 'src/app/app.dart';
-
-void main() {
-  runApp(const ProviderScope(child: GeoMomentsApp()));
+Future<void> main() async {
+  await bootstrap();
 }

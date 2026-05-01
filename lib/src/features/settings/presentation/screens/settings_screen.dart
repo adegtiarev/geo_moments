@@ -3,6 +3,7 @@ import 'package:geo_moments/src/app/localization/app_localizations_context.dart'
 import 'package:geo_moments/src/features/settings/presentation/widgets/theme_mode_selector.dart';
 
 import '../../../../core/ui/app_spacing.dart';
+import '../widgets/backend_status_tile.dart';
 import '../widgets/locale_selector.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -27,6 +28,8 @@ class SettingsScreen extends StatelessWidget {
                 Text(context.l10n.languageSettingTitle),
                 const SizedBox(height: AppSpacing.sm),
                 const LocaleSelector(),
+                const SizedBox(height: AppSpacing.lg),
+                const BackendStatusTile(),
               ],
             ),
           ),

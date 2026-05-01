@@ -61,7 +61,7 @@ Flutter темы:
 
 ### 03. Localization
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -80,6 +80,8 @@ Flutter темы:
 ## Phase 2: Data and backend foundation
 
 ### 04. Supabase Project and Environment Config
+
+Статус: next.
 
 Flutter/Supabase темы:
 

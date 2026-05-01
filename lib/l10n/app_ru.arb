@@ -15,5 +15,7 @@
   "languageSystem": "Системный",
   "languageEnglish": "Английский",
   "languageRussian": "Русский",
-  "languageSpanish": "Испанский"
+  "languageSpanish": "Испанский",
+  "backendSettingTitle": "Бэкенд",
+  "backendConfigured": "Supabase настроен: {host}"
 }

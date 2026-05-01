@@ -195,6 +195,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Spanish'**
   String get languageSpanish;
+
+  /// Settings section title for backend status
+  ///
+  /// In en, this message translates to:
+  /// **'Backend'**
+  String get backendSettingTitle;
+
+  /// Backend status text with Supabase host
+  ///
+  /// In en, this message translates to:
+  /// **'Supabase configured: {host}'**
+  String backendConfigured(String host);
 }
 
 class _AppLocalizationsDelegate

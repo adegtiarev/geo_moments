@@ -55,4 +55,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get backendSettingTitle => 'Backend';
+
+  @override
+  String backendConfigured(String host) {
+    return 'Supabase configurado: $host';
+  }
 }
