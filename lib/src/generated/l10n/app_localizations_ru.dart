@@ -63,4 +63,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String backendConfigured(String host) {
     return 'Supabase настроен: $host';
   }
+
+  @override
+  String get signInWithGoogle => 'Войти с помощью Google';
+
+  @override
+  String get signInWithApple => 'Войти с помощью Apple';
+
+  @override
+  String get authErrorMessage => 'Не удалось войти. Попробуйте еще раз.';
+
+  @override
+  String get unknownUser => 'Неизвестный пользователь';
+
+  @override
+  String get signOut => 'Выход';
 }

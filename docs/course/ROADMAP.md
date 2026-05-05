@@ -81,7 +81,7 @@ Flutter темы:
 
 ### 04. Supabase Project and Environment Config
 
-Статус: next.
+Статус: done.
 
 Flutter/Supabase темы:
 
@@ -99,6 +99,8 @@ Flutter/Supabase темы:
 - сделать health-check screen/state.
 
 ### 05. Auth and Profiles
+
+Статус: next.
 
 Flutter/Supabase темы:
 

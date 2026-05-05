@@ -10,20 +10,28 @@ final appConfigProvider = Provider<AppConfig>((ref) {
 class AppConfig {
   final String supabaseUrl;
   final String supabaseAnonKey;
+  final String authRedirectUrl;
 
-  const AppConfig({required this.supabaseUrl, required this.supabaseAnonKey});
+  const AppConfig({
+    required this.supabaseUrl,
+    required this.supabaseAnonKey,
+    required this.authRedirectUrl,
+  });
 
   static Future<AppConfig> load() async {
     await dotenv.load();
 
     final supabaseUrl = _requiredEnv('SUPABASE_URL');
     final supabaseAnonKey = _requiredEnv('SUPABASE_ANON_KEY');
+    final authRedirectUrl = _requiredEnv('AUTH_REDIRECT_URL');
 
     _validateUrl(supabaseUrl);
+    _validateUrl(authRedirectUrl, envKey: 'AUTH_REDIRECT_URL');
 
     return AppConfig(
       supabaseUrl: supabaseUrl,
       supabaseAnonKey: supabaseAnonKey,
+      authRedirectUrl: authRedirectUrl,
     );
   }
 
@@ -37,11 +45,11 @@ class AppConfig {
     return value.trim();
   }
 
-  static void _validateUrl(String value) {
+  static void _validateUrl(String value, {String envKey = 'SUPABASE_URL'}) {
     final uri = Uri.tryParse(value);
 
     if (uri == null || !uri.hasScheme || !uri.hasAuthority) {
-      throw StateError('SUPABASE_URL must be a valid URL.');
+      throw StateError('$envKey must be a valid URL.');
     }
   }
 }

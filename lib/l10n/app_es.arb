@@ -17,5 +17,10 @@
   "languageRussian": "Ruso",
   "languageSpanish": "Español",
   "backendSettingTitle": "Backend",
-  "backendConfigured": "Supabase configurado: {host}"
+  "backendConfigured": "Supabase configurado: {host}",
+  "signInWithGoogle": "Continue with Google",
+  "signInWithApple": "Continue with Apple",
+  "authErrorMessage": "Could not complete sign in. Try again.",
+  "unknownUser": "Unknown user",
+  "signOut": "Sign out"
 }

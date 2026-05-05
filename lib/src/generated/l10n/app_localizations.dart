@@ -207,6 +207,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Supabase configured: {host}'**
   String backendConfigured(String host);
+
+  /// No description provided for @signInWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get signInWithGoogle;
+
+  /// No description provided for @signInWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get signInWithApple;
+
+  /// No description provided for @authErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete sign in. Try again.'**
+  String get authErrorMessage;
+
+  /// No description provided for @unknownUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown user'**
+  String get unknownUser;
+
+  /// No description provided for @signOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
 }
 
 class _AppLocalizationsDelegate

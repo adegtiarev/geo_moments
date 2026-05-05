@@ -17,5 +17,10 @@
   "languageRussian": "Русский",
   "languageSpanish": "Испанский",
   "backendSettingTitle": "Бэкенд",
-  "backendConfigured": "Supabase настроен: {host}"
+  "backendConfigured": "Supabase настроен: {host}",
+  "signInWithGoogle": "Войти с помощью Google",
+  "signInWithApple": "Войти с помощью Apple",
+  "authErrorMessage": "Не удалось войти. Попробуйте еще раз.",
+  "unknownUser": "Неизвестный пользователь",
+  "signOut": "Выход"
 }

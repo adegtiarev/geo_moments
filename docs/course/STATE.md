@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `04-supabase-project-and-environment-config`
+Текущая стадия: `05-auth-and-profiles`
 
-Глава 3 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, responsive map placeholder layout, widget previews, локализацию EN/RU/ES и ручной переключатель языка.
+Глава 4 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, responsive map placeholder layout, widget previews, локализацию EN/RU/ES, ручной переключатель языка и Supabase bootstrap/config foundation.
 
 ## Уже сделано
 
@@ -26,21 +26,26 @@
 - Реализована глава 3: добавлены `flutter_localizations`, `intl`, `l10n.yaml`, ARB-файлы EN/RU/ES, generated localizations, `LocaleController`, `LocaleSelector`.
 - Hardcoded UI strings текущих экранов заменены на `context.l10n`.
 - Проверки главы 3 проходили: `flutter gen-l10n`, `flutter analyze`, `flutter test`; ручная проверка переключения языка выполнена.
+- Реализована глава 4: добавлены `supabase_flutter`, `flutter_dotenv`, `.env.example`, `AppConfig`, `bootstrap`, `supabaseClientProvider`, backend status в Settings.
+- `.env` игнорируется Git, реальные Supabase ключи не должны попадать в репозиторий.
+- Проверки главы 4 проходили: `flutter gen-l10n`, `flutter analyze`, `flutter test`; ручная проверка backend status выполнена.
 
 ## Следующая глава
 
-Текущая глава: [04 Supabase Project and Environment Config](lessons/04-supabase-project-and-environment-config.md)
+Текущая глава: [05 Auth and Profiles](lessons/05-auth-and-profiles.md)
 
-Цель главы: подключить Supabase SDK и безопасный runtime config без реализации auth/data features:
+Цель главы: добавить первый полноценный auth flow и базовую модель профиля без сложной бизнес-логики:
 
-- создать Supabase project вручную в dashboard;
-- добавить `supabase_flutter` и `flutter_dotenv`;
-- добавить `.env.example` и локальный `.env`;
-- инициализировать Supabase до `runApp`;
-- создать typed app config;
-- добавить health-check provider/screen section в Settings;
+- настроить redirect URLs для Supabase OAuth;
+- добавить auth state stream через Riverpod;
+- добавить `AuthScreen`;
+- добавить вход через Google OAuth для Android/dev;
+- подготовить кнопку/ветку Apple OAuth для iOS;
+- добавить auth gate в router;
+- показать signed-in user в Settings;
+- добавить sign out;
 - сохранить проект в рабочем состоянии;
-- проверка `flutter analyze`, `flutter test`, ручная проверка Supabase connection.
+- проверка `flutter analyze`, `flutter test`, ручная проверка sign in/out.
 
 ## Правило продолжения в новом чате
 
@@ -62,12 +67,15 @@ lib/src/app/router/...     GoRouter routes: / и /settings
 lib/src/app/theme/...      AppTheme light/dark
 lib/src/app/theme/...      ThemeModeController
 lib/src/app/localization   LocaleController, context.l10n
+lib/src/app/config         AppConfig
+lib/src/app/bootstrap      Supabase initialization
 lib/src/generated/l10n     generated AppLocalizations
 lib/l10n                   ARB-файлы EN/RU/ES
+lib/src/core/backend       supabaseClientProvider
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/map/...   responsive MapScreen, MapPlaceholderPanel, previews
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
-pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl подключены
+pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv подключены
 docs/course/...            документация курса
 ```
 

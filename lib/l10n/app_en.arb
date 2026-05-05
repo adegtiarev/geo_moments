@@ -77,5 +77,10 @@
         "example": "example.supabase.co"
       }
     }
-  }
+  },
+  "signInWithGoogle": "Continue with Google",
+  "signInWithApple": "Continue with Apple",
+  "authErrorMessage": "Could not complete sign in. Try again.",
+  "unknownUser": "Unknown user",
+  "signOut": "Sign out"
 }

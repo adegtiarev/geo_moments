@@ -63,4 +63,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String backendConfigured(String host) {
     return 'Supabase configurado: $host';
   }
+
+  @override
+  String get signInWithGoogle => 'Continue with Google';
+
+  @override
+  String get signInWithApple => 'Continue with Apple';
+
+  @override
+  String get authErrorMessage => 'Could not complete sign in. Try again.';
+
+  @override
+  String get unknownUser => 'Unknown user';
+
+  @override
+  String get signOut => 'Sign out';
 }
