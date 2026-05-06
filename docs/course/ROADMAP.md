@@ -100,7 +100,7 @@ Flutter/Supabase темы:
 
 ### 05. Auth and Profiles
 
-Статус: next.
+Статус: done.
 
 Flutter/Supabase темы:
 
@@ -118,6 +118,8 @@ Flutter/Supabase темы:
 - auth gate в router.
 
 ### 06. Supabase Schema, RLS, and Seed Data
+
+Статус: next.
 
 Backend темы:
 

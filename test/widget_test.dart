@@ -6,6 +6,8 @@ import 'package:geo_moments/src/app/config/app_config.dart';
 import 'package:geo_moments/src/app/localization/locale_controller.dart';
 import 'package:geo_moments/src/features/auth/domain/entities/app_user.dart';
 import 'package:geo_moments/src/features/auth/presentation/controllers/auth_providers.dart';
+import 'package:geo_moments/src/features/moments/domain/entities/moment.dart';
+import 'package:geo_moments/src/features/moments/presentation/controllers/moments_providers.dart';
 
 void main() {
   const testAppConfig = AppConfig(
@@ -20,11 +22,25 @@ void main() {
     displayName: 'Test User',
   );
 
+  final testMoments = [
+    Moment(
+      id: 'test-moment-id',
+      authorId: testUser.id,
+      latitude: -34.6037,
+      longitude: -58.3816,
+      text: 'Test coffee moment',
+      mediaType: 'photo',
+      createdAt: DateTime.utc(2026, 5, 5),
+      authorDisplayName: testUser.displayName,
+    ),
+  ];
+
   Widget buildTestApp({AppUser? currentUser = testUser}) {
     return ProviderScope(
       overrides: [
         appConfigProvider.overrideWithValue(testAppConfig),
         currentUserProvider.overrideWith((ref) => Stream.value(currentUser)),
+        nearbyMomentsProvider.overrideWith((ref) async => testMoments),
       ],
       child: const GeoMomentsApp(),
     );
@@ -43,6 +59,8 @@ void main() {
 
     expect(find.text('Geo Moments'), findsOneWidget);
     expect(find.text('Map placeholder'), findsOneWidget);
+    expect(find.text('Test coffee moment'), findsOneWidget);
+    expect(find.text('Test User'), findsOneWidget);
   });
 
   testWidgets('opens settings screen', (tester) async {

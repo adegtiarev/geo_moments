@@ -1,0 +1,9 @@
+import '../entities/moment.dart';
+
+abstract interface class MomentsRepository {
+  Future<List<Moment>> fetchNearbyMoments({
+    required double latitude,
+    required double longitude,
+    int limit = 50,
+  });
+}

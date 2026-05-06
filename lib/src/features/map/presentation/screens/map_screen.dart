@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../../core/ui/app_breakpoints.dart';
+import '../../../moments/presentation/widgets/nearby_moments_list.dart';
 import '../widgets/map_placeholder_panel.dart';
 
 class MapScreen extends StatelessWidget {
@@ -62,7 +63,7 @@ class _PhoneMapLayout extends StatelessWidget {
         children: [
           Expanded(child: MapPlaceholderPanel()),
           SizedBox(height: AppSpacing.md),
-          _NearbyMomentsSummary(),
+          SizedBox(height: 220, child: _NearbyMomentsPanel()),
         ],
       ),
     );
@@ -80,15 +81,15 @@ class _TabletMapLayout extends StatelessWidget {
         children: [
           Expanded(flex: 3, child: MapPlaceholderPanel()),
           SizedBox(width: AppSpacing.lg),
-          SizedBox(width: 320, child: _NearbyMomentsSummary()),
+          SizedBox(width: 360, child: _NearbyMomentsPanel()),
         ],
       ),
     );
   }
 }
 
-class _NearbyMomentsSummary extends StatelessWidget {
-  const _NearbyMomentsSummary();
+class _NearbyMomentsPanel extends StatelessWidget {
+  const _NearbyMomentsPanel();
 
   @override
   Widget build(BuildContext context) {
@@ -104,12 +105,11 @@ class _NearbyMomentsSummary extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(context.l10n.nearbyMomentsTitle, style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
-            Text(context.l10n.nearbyMomentsEmpty, style: textTheme.bodyMedium),
+            const Expanded(child: NearbyMomentsList()),
           ],
         ),
       ),
