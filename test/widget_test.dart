@@ -6,14 +6,18 @@ import 'package:geo_moments/src/app/config/app_config.dart';
 import 'package:geo_moments/src/app/localization/locale_controller.dart';
 import 'package:geo_moments/src/features/auth/domain/entities/app_user.dart';
 import 'package:geo_moments/src/features/auth/presentation/controllers/auth_providers.dart';
+import 'package:geo_moments/src/features/map/presentation/controllers/location_permission_controller.dart';
+import 'package:geo_moments/src/features/map/presentation/widgets/map_surface_builder.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moments_providers.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   const testAppConfig = AppConfig(
     supabaseUrl: 'https://test.supabase.co',
     supabaseAnonKey: 'test-anon-key',
     authRedirectUrl: 'test_redirect_url',
+    mapboxAccessToken: 'test_token',
   );
 
   const testUser = AppUser(
@@ -40,7 +44,18 @@ void main() {
       overrides: [
         appConfigProvider.overrideWithValue(testAppConfig),
         currentUserProvider.overrideWith((ref) => Stream.value(currentUser)),
-        nearbyMomentsProvider.overrideWith((ref) async => testMoments),
+        nearbyMomentsProvider.overrideWith((ref, center) async => testMoments),
+        locationPermissionControllerProvider.overrideWith(
+          _TestLocationPermissionController.new,
+        ),
+        mapSurfaceBuilderProvider.overrideWithValue(({
+          required moments,
+          required isLocationEnabled,
+          required onMomentSelected,
+          required onCameraCenterChanged,
+        }) {
+          return const Center(child: Text('Test map surface'));
+        }),
       ],
       child: const GeoMomentsApp(),
     );
@@ -58,7 +73,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Geo Moments'), findsOneWidget);
-    expect(find.text('Map placeholder'), findsOneWidget);
+    expect(find.text('Test map surface'), findsOneWidget);
     expect(find.text('Test coffee moment'), findsOneWidget);
     expect(find.text('Test User'), findsOneWidget);
   });
@@ -99,4 +114,17 @@ void main() {
     expect(find.text('Тема'), findsOneWidget);
     expect(find.text('Язык'), findsOneWidget);
   });
+}
+
+class _TestLocationPermissionController extends LocationPermissionController {
+  @override
+  Future<PermissionStatus> build() async {
+    return PermissionStatus.denied;
+  }
+
+  @override
+  Future<PermissionStatus> request() async {
+    state = const AsyncData(PermissionStatus.granted);
+    return PermissionStatus.granted;
+  }
 }

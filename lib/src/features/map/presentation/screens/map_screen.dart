@@ -1,29 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widget_previews.dart';
-import 'package:geo_moments/src/core/ui/app_radius.dart';
-import 'package:geo_moments/src/core/ui/app_spacing.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../app/router/app_router.dart';
 import '../../../../core/ui/app_breakpoints.dart';
+import '../../../../core/ui/app_radius.dart';
+import '../../../../core/ui/app_spacing.dart';
+import '../../../moments/domain/entities/moment.dart';
+import '../../../moments/presentation/controllers/moments_providers.dart';
 import '../../../moments/presentation/widgets/nearby_moments_list.dart';
-import '../widgets/map_placeholder_panel.dart';
+import '../../domain/entities/map_camera_center.dart';
+import '../controllers/location_permission_controller.dart';
+import '../widgets/map_surface_builder.dart';
+import '../widgets/moment_preview_sheet.dart';
 
-class MapScreen extends StatelessWidget {
-  @Preview(
-    name: 'MapScreen - phone',
-    size: Size(300, 600),
-    brightness: Brightness.light,
-  )
+class MapScreen extends ConsumerStatefulWidget {
   const MapScreen({super.key});
 
   @override
+  ConsumerState<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends ConsumerState<MapScreen> {
+  MapCameraCenter _center = MapCameraCenter.buenosAires;
+  List<Moment> _visibleMoments = const [];
+  bool _hasLoadedMoments = false;
+
+  @override
   Widget build(BuildContext context) {
+    // 1. Moments зависят от текущего центра карты.
+    final moments = ref.watch(nearbyMomentsProvider(_center));
+
+    // 2. Через builder мы сможем подменить native Mapbox в widget tests.
+    final mapBuilder = ref.watch(mapSurfaceBuilderProvider);
+
+    // 3. Permission provider говорит, можно ли включить location puck.
+    final permission = ref.watch(locationPermissionControllerProvider);
+    final isLocationEnabled = permission.when(
+      data: (status) => status.isGranted,
+      error: (_, _) => false,
+      loading: () => false,
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.mapTitle),
         actions: [
+          IconButton(
+            tooltip: context.l10n.enableLocation,
+            onPressed: () {
+              // Запрашиваем permission по явному действию пользователя.
+              ref.read(locationPermissionControllerProvider.notifier).request();
+            },
+            icon: const Icon(Icons.my_location_outlined),
+          ),
           IconButton(
             tooltip: context.l10n.settingsTooltip,
             onPressed: () => context.push(AppRoutePaths.settings),
@@ -31,65 +63,131 @@ class MapScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isTablet = AppBreakpoints.isTabletWidth(
-                constraints.maxWidth,
-              );
-              if (isTablet) {
-                return const _TabletMapLayout();
-              }
+      body: moments.when(
+        loading: () {
+          if (!_hasLoadedMoments) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-              return const _PhoneMapLayout();
-            },
-          ),
+          return _MapContent(
+            moments: _visibleMoments,
+            isLocationEnabled: isLocationEnabled,
+            mapBuilder: mapBuilder,
+            onMomentSelected: _showMomentPreview,
+            onCameraCenterChanged: _updateCenter,
+          );
+        },
+        error: (error, _) {
+          if (_hasLoadedMoments) {
+            return _MapContent(
+              moments: _visibleMoments,
+              isLocationEnabled: isLocationEnabled,
+              mapBuilder: mapBuilder,
+              onMomentSelected: _showMomentPreview,
+              onCameraCenterChanged: _updateCenter,
+            );
+          }
+
+          return Center(child: Text(context.l10n.nearbyMomentsLoadError));
+        },
+        data: (items) {
+          _visibleMoments = items;
+          _hasLoadedMoments = true;
+
+          return _MapContent(
+            moments: items,
+            // Этот bool пройдет дальше в MapboxMapPanel.
+            isLocationEnabled: isLocationEnabled,
+            mapBuilder: mapBuilder,
+            onMomentSelected: _showMomentPreview,
+            onCameraCenterChanged: _updateCenter,
+          );
+        },
+      ),
+    );
+  }
+
+  void _updateCenter(MapCameraCenter nextCenter) {
+    // Не дергаем backend из-за микродвижений камеры.
+    if (_center.isCloseTo(nextCenter)) {
+      return;
+    }
+
+    setState(() {
+      _center = nextCenter;
+    });
+  }
+
+  void _showMomentPreview(Moment moment) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => MomentPreviewSheet(moment: moment),
+    );
+  }
+}
+
+class _MapContent extends StatelessWidget {
+  const _MapContent({
+    required this.moments,
+    required this.isLocationEnabled,
+    required this.mapBuilder,
+    required this.onMomentSelected,
+    required this.onCameraCenterChanged,
+  });
+
+  final List<Moment> moments;
+  final bool isLocationEnabled;
+  final MapSurfaceBuilder mapBuilder;
+  final ValueChanged<Moment> onMomentSelected;
+  final ValueChanged<MapCameraCenter> onCameraCenterChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final map = mapBuilder(
+      moments: moments,
+      isLocationEnabled: isLocationEnabled,
+      onMomentSelected: onMomentSelected,
+      onCameraCenterChanged: onCameraCenterChanged,
+    );
+
+    final sidePanel = _NearbyMomentsPanel(moments: moments);
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isTablet = AppBreakpoints.isTabletWidth(constraints.maxWidth);
+
+            if (isTablet) {
+              return Row(
+                children: [
+                  Expanded(child: map),
+                  const SizedBox(width: AppSpacing.lg),
+                  SizedBox(width: 360, child: sidePanel),
+                ],
+              );
+            }
+
+            return Column(
+              children: [
+                Expanded(child: map),
+                const SizedBox(height: AppSpacing.md),
+                SizedBox(height: 220, child: sidePanel),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 }
 
-class _PhoneMapLayout extends StatelessWidget {
-  const _PhoneMapLayout();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(AppSpacing.md),
-      child: Column(
-        children: [
-          Expanded(child: MapPlaceholderPanel()),
-          SizedBox(height: AppSpacing.md),
-          SizedBox(height: 220, child: _NearbyMomentsPanel()),
-        ],
-      ),
-    );
-  }
-}
-
-class _TabletMapLayout extends StatelessWidget {
-  const _TabletMapLayout();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(AppSpacing.lg),
-      child: Row(
-        children: [
-          Expanded(flex: 3, child: MapPlaceholderPanel()),
-          SizedBox(width: AppSpacing.lg),
-          SizedBox(width: 360, child: _NearbyMomentsPanel()),
-        ],
-      ),
-    );
-  }
-}
-
 class _NearbyMomentsPanel extends StatelessWidget {
-  const _NearbyMomentsPanel();
+  const _NearbyMomentsPanel({required this.moments});
+
+  final List<Moment> moments;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +207,7 @@ class _NearbyMomentsPanel extends StatelessWidget {
           children: [
             Text(context.l10n.nearbyMomentsTitle, style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
-            const Expanded(child: NearbyMomentsList()),
+            Expanded(child: NearbyMomentsList(moments: moments)),
           ],
         ),
       ),

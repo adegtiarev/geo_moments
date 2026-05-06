@@ -142,6 +142,24 @@ abstract class AppLocalizations {
   /// **'Moments around you will appear here.'**
   String get nearbyMomentsEmpty;
 
+  /// Error state text when nearby moments cannot be loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load moments.'**
+  String get nearbyMomentsLoadError;
+
+  /// Tooltip for the button that requests location permission
+  ///
+  /// In en, this message translates to:
+  /// **'Enable location'**
+  String get enableLocation;
+
+  /// Message shown when location permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission is denied.'**
+  String get locationPermissionDenied;
+
   /// Settings row title for theme selection
   ///
   /// In en, this message translates to:

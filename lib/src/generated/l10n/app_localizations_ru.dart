@@ -30,6 +30,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nearbyMomentsEmpty => 'Здесь появятся моменты рядом с вами.';
 
   @override
+  String get nearbyMomentsLoadError => 'Не удалось загрузить моменты.';
+
+  @override
+  String get enableLocation => 'Включить геолокацию';
+
+  @override
+  String get locationPermissionDenied => 'Доступ к геолокации запрещен.';
+
+  @override
   String get themeSettingTitle => 'Тема';
 
   @override

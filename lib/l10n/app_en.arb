@@ -28,6 +28,18 @@
   "@nearbyMomentsEmpty": {
     "description": "Empty state text for nearby moments"
   },
+  "nearbyMomentsLoadError": "Could not load moments.",
+  "@nearbyMomentsLoadError": {
+    "description": "Error state text when nearby moments cannot be loaded"
+  },
+  "enableLocation": "Enable location",
+  "@enableLocation": {
+    "description": "Tooltip for the button that requests location permission"
+  },
+  "locationPermissionDenied": "Location permission is denied.",
+  "@locationPermissionDenied": {
+    "description": "Message shown when location permission is denied"
+  },
   "themeSettingTitle": "Theme",
   "@themeSettingTitle": {
     "description": "Settings row title for theme selection"

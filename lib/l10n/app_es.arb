@@ -7,6 +7,9 @@
   "mapPlaceholder": "Aquí estará el mapa",
   "nearbyMomentsTitle": "Momentos cercanos",
   "nearbyMomentsEmpty": "Aquí aparecerán los momentos cercanos.",
+  "nearbyMomentsLoadError": "No se pudieron cargar los momentos.",
+  "enableLocation": "Activar ubicación",
+  "locationPermissionDenied": "El permiso de ubicación está denegado.",
   "themeSettingTitle": "Tema",
   "themeSystem": "Sistema",
   "themeLight": "Claro",
@@ -18,9 +21,9 @@
   "languageSpanish": "Español",
   "backendSettingTitle": "Backend",
   "backendConfigured": "Supabase configurado: {host}",
-  "signInWithGoogle": "Continue with Google",
-  "signInWithApple": "Continue with Apple",
-  "authErrorMessage": "Could not complete sign in. Try again.",
-  "unknownUser": "Unknown user",
-  "signOut": "Sign out"
+  "signInWithGoogle": "Continuar con Google",
+  "signInWithApple": "Continuar con Apple",
+  "authErrorMessage": "No se pudo completar el inicio de sesión. Inténtalo de nuevo.",
+  "unknownUser": "Usuario desconocido",
+  "signOut": "Cerrar sesión"
 }

@@ -8,15 +8,17 @@ final appConfigProvider = Provider<AppConfig>((ref) {
 });
 
 class AppConfig {
-  final String supabaseUrl;
-  final String supabaseAnonKey;
-  final String authRedirectUrl;
-
   const AppConfig({
     required this.supabaseUrl,
     required this.supabaseAnonKey,
     required this.authRedirectUrl,
+    required this.mapboxAccessToken,
   });
+
+  final String supabaseUrl;
+  final String supabaseAnonKey;
+  final String authRedirectUrl;
+  final String mapboxAccessToken;
 
   static Future<AppConfig> load() async {
     await dotenv.load();
@@ -24,6 +26,7 @@ class AppConfig {
     final supabaseUrl = _requiredEnv('SUPABASE_URL');
     final supabaseAnonKey = _requiredEnv('SUPABASE_ANON_KEY');
     final authRedirectUrl = _requiredEnv('AUTH_REDIRECT_URL');
+    final mapboxAccessToken = _requiredEnv('MAPBOX_ACCESS_TOKEN');
 
     _validateUrl(supabaseUrl);
     _validateUrl(authRedirectUrl, envKey: 'AUTH_REDIRECT_URL');
@@ -32,6 +35,7 @@ class AppConfig {
       supabaseUrl: supabaseUrl,
       supabaseAnonKey: supabaseAnonKey,
       authRedirectUrl: authRedirectUrl,
+      mapboxAccessToken: mapboxAccessToken,
     );
   }
 

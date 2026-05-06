@@ -119,7 +119,7 @@ Flutter/Supabase темы:
 
 ### 06. Supabase Schema, RLS, and Seed Data
 
-Статус: next.
+Статус: done.
 
 Backend темы:
 
@@ -139,6 +139,8 @@ Backend темы:
 ## Phase 3: Map and moments
 
 ### 07. Map Screen
+
+Статус: next.
 
 Flutter темы:
 

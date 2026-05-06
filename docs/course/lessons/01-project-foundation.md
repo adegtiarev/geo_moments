@@ -1,6 +1,6 @@
 # 01 Project Foundation
 
-Статус: in progress.
+Статус: done.
 
 ## Что строим в этой главе
 

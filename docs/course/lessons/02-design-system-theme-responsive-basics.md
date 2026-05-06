@@ -1,6 +1,6 @@
 # 02 Design System, Theme, Responsive Basics
 
-Статус: next.
+Статус: done.
 
 ## Что строим в этой главе
 
@@ -838,4 +838,3 @@ selected: {themeMode}
 ```text
 Глава 2 готова, проверь код.
 ```
-

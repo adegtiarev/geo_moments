@@ -1,6 +1,6 @@
 # 05 Auth and Profiles
 
-Статус: next.
+Статус: done.
 
 ## Источники
 
@@ -1111,4 +1111,3 @@ io.supabase.geomoments://login-callback/
 ```text
 Глава 5 готова, проверь код.
 ```
-

@@ -1,6 +1,6 @@
 # 06 Supabase Schema, RLS, and Seed Data
 
-Статус: next.
+Статус: done.
 
 ## Источники
 
@@ -1009,4 +1009,3 @@ final maps = rows.cast<Map<String, dynamic>>();
 ```text
 Глава 6 готова, проверь код.
 ```
-

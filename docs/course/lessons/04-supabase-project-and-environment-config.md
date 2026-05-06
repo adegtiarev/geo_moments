@@ -1,6 +1,6 @@
 # 04 Supabase Project and Environment Config
 
-Статус: next.
+Статус: done.
 
 ## Что строим в этой главе
 
@@ -704,4 +704,3 @@ git status --short
 ```text
 Глава 4 готова, проверь код.
 ```
-

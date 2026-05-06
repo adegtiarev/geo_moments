@@ -30,6 +30,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nearbyMomentsEmpty => 'Aquí aparecerán los momentos cercanos.';
 
   @override
+  String get nearbyMomentsLoadError => 'No se pudieron cargar los momentos.';
+
+  @override
+  String get enableLocation => 'Activar ubicación';
+
+  @override
+  String get locationPermissionDenied =>
+      'El permiso de ubicación está denegado.';
+
+  @override
   String get themeSettingTitle => 'Tema';
 
   @override
@@ -65,17 +75,18 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get signInWithGoogle => 'Continue with Google';
+  String get signInWithGoogle => 'Continuar con Google';
 
   @override
-  String get signInWithApple => 'Continue with Apple';
+  String get signInWithApple => 'Continuar con Apple';
 
   @override
-  String get authErrorMessage => 'Could not complete sign in. Try again.';
+  String get authErrorMessage =>
+      'No se pudo completar el inicio de sesión. Inténtalo de nuevo.';
 
   @override
-  String get unknownUser => 'Unknown user';
+  String get unknownUser => 'Usuario desconocido';
 
   @override
-  String get signOut => 'Sign out';
+  String get signOut => 'Cerrar sesión';
 }
