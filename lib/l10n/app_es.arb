@@ -25,5 +25,9 @@
   "signInWithApple": "Continuar con Apple",
   "authErrorMessage": "No se pudo completar el inicio de sesión. Inténtalo de nuevo.",
   "unknownUser": "Usuario desconocido",
-  "signOut": "Cerrar sesión"
+  "signOut": "Cerrar sesión",
+  "viewMomentDetails": "Ver detalles",
+  "momentDetailsTitle": "Detalles del momento",
+  "momentDetailsLoadError": "No se pudo cargar este momento.",
+  "retry": "Reintentar"
 }

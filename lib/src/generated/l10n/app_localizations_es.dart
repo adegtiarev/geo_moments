@@ -89,4 +89,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signOut => 'Cerrar sesión';
+
+  @override
+  String get viewMomentDetails => 'Ver detalles';
+
+  @override
+  String get momentDetailsTitle => 'Detalles del momento';
+
+  @override
+  String get momentDetailsLoadError => 'No se pudo cargar este momento.';
+
+  @override
+  String get retry => 'Reintentar';
 }

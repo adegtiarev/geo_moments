@@ -1,6 +1,6 @@
 # 07 Map Screen
 
-Статус: next.
+Статус: done.
 
 ## Источники
 
@@ -669,7 +669,23 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
   MapboxMap? _mapboxMap;
   CircleAnnotationManager? _circleAnnotationManager;
   Timer? _cameraDebounce;
+  late ViewportState _viewport;
   String? _lastStyleUri;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _viewport = CameraViewportState(
+      center: Point(
+        coordinates: Position(
+          MapCameraCenter.buenosAires.longitude,
+          MapCameraCenter.buenosAires.latitude,
+        ),
+      ),
+      zoom: 12,
+    );
+  }
 
   @override
   void didUpdateWidget(covariant MapboxMapPanel oldWidget) {
@@ -704,15 +720,7 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
       child: MapWidget(
         key: const ValueKey('geoMomentsMap'),
         styleUri: _styleUriFor(context),
-        viewport: CameraViewportState(
-          center: Point(
-            coordinates: Position(
-              MapCameraCenter.buenosAires.longitude,
-              MapCameraCenter.buenosAires.latitude,
-            ),
-          ),
-          zoom: 12,
-        ),
+        viewport: _viewport,
         onMapCreated: _onMapCreated,
         onCameraChangeListener: _onCameraChanged,
       ),
@@ -750,12 +758,24 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
         return;
       }
 
+      _switchToIdleViewport();
+
       widget.onCameraCenterChanged(
         MapCameraCenter(
           latitude: center.coordinates.lat.toDouble(),
           longitude: center.coordinates.lng.toDouble(),
         ),
       );
+    });
+  }
+
+  void _switchToIdleViewport() {
+    if (_viewport is IdleViewportState) {
+      return;
+    }
+
+    setState(() {
+      _viewport = const IdleViewportState();
     });
   }
 
@@ -797,6 +817,8 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
 ```
 
 Если analyzer в твоей версии SDK покажет, что `lat/lng` accessors отличаются, открой generated API docs для `Position` и поправь только этот участок. Смысл должен остаться тем же: Mapbox хранит center как `Position(lng, lat)`, а наш app domain хранит `latitude/longitude`.
+
+Важный lifecycle-момент: стартовый `CameraViewportState` нельзя заново создавать в каждом `build`, иначе при refresh данных карта будет возвращаться в начальную точку. Поэтому `_viewport` хранится в state, а после первого движения пользователя переключается в `IdleViewportState`.
 
 ### Шаг 12. Включить location puck внутри `MapboxMapPanel`
 
@@ -1021,6 +1043,8 @@ class MapScreen extends ConsumerStatefulWidget {
 
 class _MapScreenState extends ConsumerState<MapScreen> {
   MapCameraCenter _center = MapCameraCenter.buenosAires;
+  List<Moment> _visibleMoments = const [];
+  bool _hasLoadedMoments = false;
 
   @override
   Widget build(BuildContext context) {
@@ -1032,7 +1056,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
     // 3. Permission provider говорит, можно ли включить location puck.
     final permission = ref.watch(locationPermissionControllerProvider);
-    final isLocationEnabled = permission.valueOrNull?.isGranted ?? false;
+    final isLocationEnabled = permission.when(
+      data: (status) => status.isGranted,
+      error: (_, _) => false,
+      loading: () => false,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -1054,11 +1082,36 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ],
       ),
       body: moments.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Text(context.l10n.nearbyMomentsLoadError),
-        ),
+        loading: () {
+          if (!_hasLoadedMoments) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return _MapContent(
+            moments: _visibleMoments,
+            isLocationEnabled: isLocationEnabled,
+            mapBuilder: mapBuilder,
+            onMomentSelected: _showMomentPreview,
+            onCameraCenterChanged: _updateCenter,
+          );
+        },
+        error: (error, _) {
+          if (_hasLoadedMoments) {
+            return _MapContent(
+              moments: _visibleMoments,
+              isLocationEnabled: isLocationEnabled,
+              mapBuilder: mapBuilder,
+              onMomentSelected: _showMomentPreview,
+              onCameraCenterChanged: _updateCenter,
+            );
+          }
+
+          return Center(child: Text(context.l10n.nearbyMomentsLoadError));
+        },
         data: (items) {
+          _visibleMoments = items;
+          _hasLoadedMoments = true;
+
           return _MapContent(
             moments: items,
             // Этот bool пройдет дальше в MapboxMapPanel.

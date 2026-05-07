@@ -255,6 +255,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign out'**
   String get signOut;
+
+  /// No description provided for @viewMomentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get viewMomentDetails;
+
+  /// No description provided for @momentDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moment details'**
+  String get momentDetailsTitle;
+
+  /// No description provided for @momentDetailsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this moment.'**
+  String get momentDetailsLoadError;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate

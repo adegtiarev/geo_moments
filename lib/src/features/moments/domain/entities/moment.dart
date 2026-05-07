@@ -11,6 +11,8 @@ class Moment {
     this.mediaUrl,
     this.authorDisplayName,
     this.authorAvatarUrl,
+    this.likeCount = 0,
+    this.commentCount = 0,
   });
 
   final String id;
@@ -24,4 +26,6 @@ class Moment {
   final String? mediaUrl;
   final String? authorDisplayName;
   final String? authorAvatarUrl;
+  final int likeCount;
+  final int commentCount;
 }

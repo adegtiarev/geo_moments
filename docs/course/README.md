@@ -29,7 +29,7 @@
 
 ## Текущий проект
 
-Текущая стадия: завершена глава 6, следующая глава - [07 Map Screen](lessons/07-map-screen.md).
+Текущая стадия: завершена глава 7, следующая глава - [08 Moment Details](lessons/08-moment-details.md).
 
 - Flutter: 3.41.0 stable
 - Dart: 3.11.0
@@ -37,6 +37,7 @@
 - Navigation: `go_router`
 - Backend: Supabase Auth, Postgres, RLS, Storage
 - Current data: seed moments из Supabase через repository/provider layer
-- Следующий platform feature: Mapbox-карта с markers и location permission
+- Current map: Mapbox-карта с markers, bottom sheet preview и location permission
+- Следующий feature: карточка момента и отдельный экран деталей
 - Push: Firebase Cloud Messaging запланирован в поздней phase
 - Platforms: Android и iOS

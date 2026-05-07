@@ -25,5 +25,9 @@
   "signInWithApple": "Войти с помощью Apple",
   "authErrorMessage": "Не удалось войти. Попробуйте еще раз.",
   "unknownUser": "Неизвестный пользователь",
-  "signOut": "Выход"
+  "signOut": "Выход",
+  "viewMomentDetails": "Открыть детали",
+  "momentDetailsTitle": "Детали момента",
+  "momentDetailsLoadError": "Не удалось загрузить этот момент.",
+  "retry": "Повторить"
 }

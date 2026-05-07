@@ -20,11 +20,7 @@ void main() {
     mapboxAccessToken: 'test_token',
   );
 
-  const testUser = AppUser(
-    id: 'test-user-id',
-    email: 'test@example.com',
-    displayName: 'Test User',
-  );
+  const testUser = AppUser(id: 'test-user-id', email: 'test@example.com', displayName: 'Test User');
 
   final testMoments = [
     Moment(
@@ -33,7 +29,7 @@ void main() {
       latitude: -34.6037,
       longitude: -58.3816,
       text: 'Test coffee moment',
-      mediaType: 'photo',
+      mediaType: 'none',
       createdAt: DateTime.utc(2026, 5, 5),
       authorDisplayName: testUser.displayName,
     ),
@@ -45,9 +41,7 @@ void main() {
         appConfigProvider.overrideWithValue(testAppConfig),
         currentUserProvider.overrideWith((ref) => Stream.value(currentUser)),
         nearbyMomentsProvider.overrideWith((ref, center) async => testMoments),
-        locationPermissionControllerProvider.overrideWith(
-          _TestLocationPermissionController.new,
-        ),
+        locationPermissionControllerProvider.overrideWith(_TestLocationPermissionController.new),
         mapSurfaceBuilderProvider.overrideWithValue(({
           required moments,
           required isLocationEnabled,
@@ -55,6 +49,9 @@ void main() {
           required onCameraCenterChanged,
         }) {
           return const Center(child: Text('Test map surface'));
+        }),
+        momentDetailsProvider.overrideWith((ref, id) async {
+          return testMoments.singleWhere((moment) => moment.id == id);
         }),
       ],
       child: const GeoMomentsApp(),
@@ -113,6 +110,24 @@ void main() {
     expect(find.text('Настройки'), findsOneWidget);
     expect(find.text('Тема'), findsOneWidget);
     expect(find.text('Язык'), findsOneWidget);
+  });
+
+  testWidgets('opens moment details from list preview', (tester) async {
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Test coffee moment'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('View details'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Moment details'), findsOneWidget);
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Test coffee moment'), findsOneWidget);
+    expect(find.text('Test User'), findsOneWidget);
   });
 }
 

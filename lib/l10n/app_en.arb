@@ -94,5 +94,9 @@
   "signInWithApple": "Continue with Apple",
   "authErrorMessage": "Could not complete sign in. Try again.",
   "unknownUser": "Unknown user",
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+  "viewMomentDetails": "View details",
+  "momentDetailsTitle": "Moment details",
+  "momentDetailsLoadError": "Could not load this moment.",
+  "retry": "Retry"
 }

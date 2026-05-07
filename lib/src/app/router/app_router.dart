@@ -6,12 +6,18 @@ import '../../features/auth/presentation/controllers/auth_providers.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
 import '../../features/map/presentation/screens/map_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/moments/presentation/screens/moment_details_screen.dart';
 
 abstract final class AppRoutePaths {
   static const splash = '/splash';
   static const auth = '/auth';
   static const map = '/';
   static const settings = '/settings';
+  static const momentDetailsPattern = '/moments/:momentId';
+
+  static String momentDetails(String momentId) {
+    return '/moments/${Uri.encodeComponent(momentId)}';
+  }
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -58,6 +64,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutePaths.settings,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePaths.momentDetailsPattern,
+        builder: (context, state) {
+          final momentId = state.pathParameters['momentId']!;
+
+          return MomentDetailsScreen(momentId: momentId);
+        },
       ),
     ],
   );

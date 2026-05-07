@@ -140,7 +140,7 @@ Backend темы:
 
 ### 07. Map Screen
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -158,6 +158,8 @@ Flutter темы:
 - открыть bottom sheet по marker tap.
 
 ### 08. Moment Details
+
+Статус: next.
 
 Flutter темы:
 

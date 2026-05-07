@@ -122,7 +122,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (context) => MomentPreviewSheet(moment: moment),
+      builder: (sheetContext) {
+        return MomentPreviewSheet(
+          moment: moment,
+          onViewDetails: () {
+            Navigator.of(sheetContext).pop();
+            context.push(AppRoutePaths.momentDetails(moment.id));
+          },
+        );
+      },
     );
   }
 }
@@ -151,7 +159,7 @@ class _MapContent extends StatelessWidget {
       onCameraCenterChanged: onCameraCenterChanged,
     );
 
-    final sidePanel = _NearbyMomentsPanel(moments: moments);
+    final sidePanel = _NearbyMomentsPanel(moments: moments, onMomentSelected: onMomentSelected);
 
     return SafeArea(
       child: Padding(
@@ -185,9 +193,10 @@ class _MapContent extends StatelessWidget {
 }
 
 class _NearbyMomentsPanel extends StatelessWidget {
-  const _NearbyMomentsPanel({required this.moments});
+  const _NearbyMomentsPanel({required this.moments, required this.onMomentSelected});
 
   final List<Moment> moments;
+  final ValueChanged<Moment> onMomentSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +216,9 @@ class _NearbyMomentsPanel extends StatelessWidget {
           children: [
             Text(context.l10n.nearbyMomentsTitle, style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
-            Expanded(child: NearbyMomentsList(moments: moments)),
+            Expanded(
+              child: NearbyMomentsList(moments: moments, onMomentTap: onMomentSelected),
+            ),
           ],
         ),
       ),

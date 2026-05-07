@@ -6,4 +6,6 @@ abstract interface class MomentsRepository {
     required double longitude,
     int limit = 50,
   });
+
+  Future<Moment> fetchMomentById(String id);
 }

@@ -87,4 +87,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOut => 'Sign out';
+
+  @override
+  String get viewMomentDetails => 'View details';
+
+  @override
+  String get momentDetailsTitle => 'Moment details';
+
+  @override
+  String get momentDetailsLoadError => 'Could not load this moment.';
+
+  @override
+  String get retry => 'Retry';
 }

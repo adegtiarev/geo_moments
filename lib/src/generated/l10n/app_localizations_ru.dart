@@ -87,4 +87,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signOut => 'Выход';
+
+  @override
+  String get viewMomentDetails => 'Открыть детали';
+
+  @override
+  String get momentDetailsTitle => 'Детали момента';
+
+  @override
+  String get momentDetailsLoadError => 'Не удалось загрузить этот момент.';
+
+  @override
+  String get retry => 'Повторить';
 }

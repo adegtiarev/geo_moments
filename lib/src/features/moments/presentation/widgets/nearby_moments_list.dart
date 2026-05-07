@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../core/ui/app_spacing.dart';
 import '../../domain/entities/moment.dart';
+import 'moment_preview_card.dart';
 
 class NearbyMomentsList extends StatelessWidget {
-  const NearbyMomentsList({required this.moments, super.key});
+  const NearbyMomentsList({required this.moments, this.onMomentTap, super.key});
 
+  final ValueChanged<Moment>? onMomentTap;
   final List<Moment> moments;
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +24,9 @@ class NearbyMomentsList extends StatelessWidget {
       itemBuilder: (context, index) {
         final moment = moments[index];
 
-        return ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(moment.text),
-          subtitle: Text(moment.authorDisplayName ?? moment.authorId),
-          leading: const Icon(Icons.place_outlined),
+        return MomentPreviewCard(
+          moment: moment,
+          onTap: onMomentTap == null ? null : () => onMomentTap!(moment),
         );
       },
     );
