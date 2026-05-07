@@ -20,7 +20,11 @@ void main() {
     mapboxAccessToken: 'test_token',
   );
 
-  const testUser = AppUser(id: 'test-user-id', email: 'test@example.com', displayName: 'Test User');
+  const testUser = AppUser(
+    id: 'test-user-id',
+    email: 'test@example.com',
+    displayName: 'Test User',
+  );
 
   final testMoments = [
     Moment(
@@ -41,7 +45,9 @@ void main() {
         appConfigProvider.overrideWithValue(testAppConfig),
         currentUserProvider.overrideWith((ref) => Stream.value(currentUser)),
         nearbyMomentsProvider.overrideWith((ref, center) async => testMoments),
-        locationPermissionControllerProvider.overrideWith(_TestLocationPermissionController.new),
+        locationPermissionControllerProvider.overrideWith(
+          _TestLocationPermissionController.new,
+        ),
         mapSurfaceBuilderProvider.overrideWithValue(({
           required moments,
           required isLocationEnabled,
@@ -128,6 +134,32 @@ void main() {
 
     expect(find.text('Test coffee moment'), findsOneWidget);
     expect(find.text('Test User'), findsOneWidget);
+  });
+
+  testWidgets('opens create moment screen', (tester) async {
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Create moment'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Create moment'), findsOneWidget);
+    expect(find.text('What happened here?'), findsOneWidget);
+    expect(find.text('Add a photo or video'), findsOneWidget);
+  });
+
+  testWidgets('requires media and text before saving draft', (tester) async {
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Create moment'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Save draft'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Add a short description.'), findsOneWidget);
+    expect(find.text('Add media and a description first.'), findsOneWidget);
   });
 }
 

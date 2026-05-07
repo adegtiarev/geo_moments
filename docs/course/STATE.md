@@ -1,12 +1,12 @@
 # Course State
 
-Последнее обновление: 2026-05-06
+Последнее обновление: 2026-05-07
 
 ## Статус
 
-Текущая стадия: `08-moment-details`
+Текущая стадия: `09-create-moment-media-capture`
 
-Глава 7 завершена и закоммичена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase и настоящий Mapbox map screen с markers, responsive layout, location permission и marker preview bottom sheet.
+Глава 8 завершена пользователем и проверена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet и details route `/moments/:momentId`.
 
 ## Уже сделано
 
@@ -41,24 +41,32 @@
 - Seed moments отображаются на карте как circle annotations; tap по marker открывает bottom sheet preview.
 - Исправлены ошибки главы 7: bottom sheet больше не узкий, карта не возвращается к стартовой позиции при drag.
 - Проверки главы 7 проходили: `flutter gen-l10n`, `flutter analyze`, `flutter test`; ручная Android-проверка карты выполнена пользователем.
+- Реализована глава 8: добавлены route `/moments/:momentId`, `AppRoutePaths.momentDetails(id)`, `MomentsRepository.fetchMomentById`, `SupabaseMomentsRepository.fetchMomentById`, `momentDetailsProvider`.
+- Добавлены `MomentPreviewCard`, `MomentDetailsScreen`, `MomentDetailsContent`, `MomentDetailsSkeleton`, `MomentErrorView`, `MomentMediaView`.
+- `MomentPreviewSheet` теперь показывает reusable preview card и кнопку `View details`.
+- `NearbyMomentsList` умеет принимать `onMomentTap`; marker tap и list tap открывают один preview flow.
+- `Moment` и DTO подготовлены к `likeCount`, `commentCount`, `mediaUrl`, `mediaType`, `authorAvatarUrl`.
+- Исправлен новый widget test главы 8: details content проверяется после scroll внутри `ListView`, потому что media placeholder занимает первый viewport.
+- Проверки после главы 8 проходили: `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: [08 Moment Details](lessons/08-moment-details.md)
+Текущая глава: [09 Create Moment: Media Capture](lessons/09-create-moment-media-capture.md)
 
-Цель главы: превратить marker preview в полноценный details flow:
+Цель главы: добавить первый create flow без backend save:
 
-- добавить route `/moments/:momentId`;
-- научиться читать `GoRouterState.pathParameters`;
-- добавить repository method `fetchMomentById`;
-- добавить `momentDetailsProvider`;
-- создать reusable `MomentPreviewCard` и `MomentDetailsScreen`;
-- обновить marker bottom sheet: preview + button "View details";
-- открыть details screen из bottom sheet и из nearby list;
-- показать loading/error/not-found states;
-- подготовить поля counters/media presentation без преждевременного social/media complexity;
-- сохранить tests через provider overrides и fake map surface;
-- проверка `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручная проверка navigation flow.
+- добавить `image_picker`;
+- настроить Android/iOS camera/photo/video permission metadata;
+- создать route `/moments/new`;
+- открыть create screen из `MapScreen`;
+- выбрать фото/видео из gallery;
+- снять фото или записать видео через camera;
+- держать media/text/emotion как локальный draft в Riverpod `Notifier`;
+- спрятать `image_picker` за `MomentMediaPicker`, чтобы UI и tests не зависели от native plugin;
+- обработать Android `retrieveLostData()`;
+- добавить validation для media + description;
+- сохранить tests через provider overrides и без запуска native picker;
+- проверка `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручная Android-проверка media picker.
 
 ## Правило продолжения в новом чате
 
@@ -76,7 +84,7 @@
 ```text
 lib/main.dart              entrypoint с ProviderScope
 lib/src/app/app.dart       GeoMomentsApp с MaterialApp.router
-lib/src/app/router/...     GoRouter routes: / и /settings
+lib/src/app/router/...     GoRouter routes: /, /settings, /moments/:momentId; глава 9 добавит /moments/new
 lib/src/app/theme/...      AppTheme light/dark
 lib/src/app/theme/...      ThemeModeController
 lib/src/app/localization   LocaleController, context.l10n
@@ -87,8 +95,8 @@ lib/l10n                   ARB-файлы EN/RU/ES
 lib/src/core/backend       supabaseClientProvider
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/auth      AuthScreen, AuthRepository, AppUser, auth providers
-lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker preview bottom sheet
-lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList; глава 8 добавит details screen/card
+lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker/list preview bottom sheet
+lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets; глава 9 добавит create draft/media picker flow
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
 pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler подключены
 supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments

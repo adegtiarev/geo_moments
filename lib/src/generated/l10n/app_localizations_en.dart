@@ -99,4 +99,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get createMomentTooltip => 'Create moment';
+
+  @override
+  String get createMomentTitle => 'Create moment';
+
+  @override
+  String get saveDraft => 'Save draft';
+
+  @override
+  String get createMomentMediaEmpty => 'Add a photo or video';
+
+  @override
+  String get createMomentMediaError => 'Could not show this media';
+
+  @override
+  String get removeMedia => 'Remove media';
+
+  @override
+  String get pickPhoto => 'Pick photo';
+
+  @override
+  String get takePhoto => 'Take photo';
+
+  @override
+  String get pickVideo => 'Pick video';
+
+  @override
+  String get recordVideo => 'Record video';
+
+  @override
+  String get createMomentTextLabel => 'What happened here?';
+
+  @override
+  String get createMomentEmotionLabel => 'Emotion';
+
+  @override
+  String get createMomentTextRequired => 'Add a short description.';
+
+  @override
+  String get createMomentDraftInvalid => 'Add media and a description first.';
+
+  @override
+  String get createMomentDraftSaved => 'Draft saved.';
+
+  @override
+  String get createMomentMediaPickError => 'Could not pick media.';
 }

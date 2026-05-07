@@ -1,6 +1,6 @@
 # 08 Moment Details
 
-Статус: next.
+Статус: done.
 
 ## Источники
 

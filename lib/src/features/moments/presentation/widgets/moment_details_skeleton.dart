@@ -26,10 +26,7 @@ class MomentDetailsSkeleton extends StatelessWidget {
 }
 
 class _SkeletonBox extends StatelessWidget {
-  const _SkeletonBox({
-    required this.height,
-    required this.color,
-  });
+  const _SkeletonBox({required this.height, required this.color});
 
   final double height;
   final Color color;

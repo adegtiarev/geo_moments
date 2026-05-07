@@ -4,10 +4,7 @@ import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../core/ui/app_spacing.dart';
 
 class MomentErrorView extends StatelessWidget {
-  const MomentErrorView({
-    required this.onRetry,
-    super.key,
-  });
+  const MomentErrorView({required this.onRetry, super.key});
 
   final VoidCallback onRetry;
 

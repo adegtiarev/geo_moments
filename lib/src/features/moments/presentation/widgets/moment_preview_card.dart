@@ -21,19 +21,15 @@ class MomentPreviewCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final author = moment.authorDisplayName ?? moment.authorId;
     final localeName = Localizations.localeOf(context).toString();
-    final createdAt = DateFormat.yMMMd(localeName)
-        .add_Hm()
-        .format(moment.createdAt.toLocal());
+    final createdAt = DateFormat.yMMMd(
+      localeName,
+    ).add_Hm().format(moment.createdAt.toLocal());
 
     return ListTile(
       contentPadding: EdgeInsets.zero,
       onTap: onTap,
       leading: const Icon(Icons.place_outlined),
-      title: Text(
-        moment.text,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
+      title: Text(moment.text, maxLines: 2, overflow: TextOverflow.ellipsis),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: AppSpacing.xs),
         child: Column(

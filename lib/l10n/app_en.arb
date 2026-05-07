@@ -98,5 +98,21 @@
   "viewMomentDetails": "View details",
   "momentDetailsTitle": "Moment details",
   "momentDetailsLoadError": "Could not load this moment.",
-  "retry": "Retry"
+  "retry": "Retry",
+  "createMomentTooltip": "Create moment",
+  "createMomentTitle": "Create moment",
+  "saveDraft": "Save draft",
+  "createMomentMediaEmpty": "Add a photo or video",
+  "createMomentMediaError": "Could not show this media",
+  "removeMedia": "Remove media",
+  "pickPhoto": "Pick photo",
+  "takePhoto": "Take photo",
+  "pickVideo": "Pick video",
+  "recordVideo": "Record video",
+  "createMomentTextLabel": "What happened here?",
+  "createMomentEmotionLabel": "Emotion",
+  "createMomentTextRequired": "Add a short description.",
+  "createMomentDraftInvalid": "Add media and a description first.",
+  "createMomentDraftSaved": "Draft saved.",
+  "createMomentMediaPickError": "Could not pick media."
 }

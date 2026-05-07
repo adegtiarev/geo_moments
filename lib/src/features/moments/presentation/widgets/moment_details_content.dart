@@ -6,10 +6,7 @@ import '../../domain/entities/moment.dart';
 import 'moment_media_view.dart';
 
 class MomentDetailsContent extends StatelessWidget {
-  const MomentDetailsContent({
-    required this.moment,
-    super.key,
-  });
+  const MomentDetailsContent({required this.moment, super.key});
 
   final Moment moment;
 
@@ -18,9 +15,9 @@ class MomentDetailsContent extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final author = moment.authorDisplayName ?? moment.authorId;
     final localeName = Localizations.localeOf(context).toString();
-    final createdAt = DateFormat.yMMMMd(localeName)
-        .add_Hm()
-        .format(moment.createdAt.toLocal());
+    final createdAt = DateFormat.yMMMMd(
+      localeName,
+    ).add_Hm().format(moment.createdAt.toLocal());
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -36,18 +33,13 @@ class MomentDetailsContent extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Wrap(
             spacing: AppSpacing.sm,
-            children: [
-              Chip(label: Text(moment.emotion!)),
-            ],
+            children: [Chip(label: Text(moment.emotion!))],
           ),
         ],
         const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
-            _Metric(
-              icon: Icons.favorite_border,
-              value: moment.likeCount,
-            ),
+            _Metric(icon: Icons.favorite_border, value: moment.likeCount),
             const SizedBox(width: AppSpacing.lg),
             _Metric(
               icon: Icons.mode_comment_outlined,
@@ -61,10 +53,7 @@ class MomentDetailsContent extends StatelessWidget {
 }
 
 class _Metric extends StatelessWidget {
-  const _Metric({
-    required this.icon,
-    required this.value,
-  });
+  const _Metric({required this.icon, required this.value});
 
   final IconData icon;
   final int value;

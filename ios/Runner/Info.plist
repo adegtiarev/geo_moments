@@ -79,5 +79,11 @@
     </array>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Geo Moments uses your location to show nearby moments on the map.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Geo Moments uses the camera to capture moments.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Geo Moments lets you choose media for a moment.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Geo Moments uses the microphone when recording videos.</string>
 </dict>
 </plist>

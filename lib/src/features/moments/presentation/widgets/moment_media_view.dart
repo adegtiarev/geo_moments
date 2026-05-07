@@ -5,10 +5,7 @@ import '../../../../core/ui/app_spacing.dart';
 import '../../domain/entities/moment.dart';
 
 class MomentMediaView extends StatelessWidget {
-  const MomentMediaView({
-    required this.moment,
-    super.key,
-  });
+  const MomentMediaView({required this.moment, super.key});
 
   final Moment moment;
 
@@ -41,9 +38,7 @@ class MomentMediaView extends StatelessWidget {
 }
 
 class _MediaPlaceholder extends StatelessWidget {
-  const _MediaPlaceholder({
-    required this.icon,
-  });
+  const _MediaPlaceholder({required this.icon});
 
   final IconData icon;
 

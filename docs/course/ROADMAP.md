@@ -159,7 +159,7 @@ Flutter темы:
 
 ### 08. Moment Details
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -176,6 +176,8 @@ Flutter темы:
 - skeleton/placeholder states.
 
 ### 09. Create Moment: Media Capture
+
+Статус: next.
 
 Flutter темы:
 

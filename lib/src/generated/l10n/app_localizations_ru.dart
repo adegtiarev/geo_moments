@@ -99,4 +99,52 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get retry => 'Повторить';
+
+  @override
+  String get createMomentTooltip => 'Создать момент';
+
+  @override
+  String get createMomentTitle => 'Создать момент';
+
+  @override
+  String get saveDraft => 'Сохранить черновик';
+
+  @override
+  String get createMomentMediaEmpty => 'Добавь фото или видео';
+
+  @override
+  String get createMomentMediaError => 'Не удалось показать это медиа';
+
+  @override
+  String get removeMedia => 'Удалить медиа';
+
+  @override
+  String get pickPhoto => 'Выбрать фото';
+
+  @override
+  String get takePhoto => 'Снять фото';
+
+  @override
+  String get pickVideo => 'Выбрать видео';
+
+  @override
+  String get recordVideo => 'Записать видео';
+
+  @override
+  String get createMomentTextLabel => 'Что здесь произошло?';
+
+  @override
+  String get createMomentEmotionLabel => 'Эмоция';
+
+  @override
+  String get createMomentTextRequired => 'Добавь короткое описание.';
+
+  @override
+  String get createMomentDraftInvalid => 'Сначала добавь медиа и описание.';
+
+  @override
+  String get createMomentDraftSaved => 'Черновик сохранен.';
+
+  @override
+  String get createMomentMediaPickError => 'Не удалось выбрать медиа.';
 }

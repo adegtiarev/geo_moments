@@ -49,6 +49,11 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         title: Text(context.l10n.mapTitle),
         actions: [
           IconButton(
+            tooltip: context.l10n.createMomentTooltip,
+            onPressed: () => context.push(AppRoutePaths.createMoment),
+            icon: const Icon(Icons.add_location_alt_outlined),
+          ),
+          IconButton(
             tooltip: context.l10n.enableLocation,
             onPressed: () {
               // Запрашиваем permission по явному действию пользователя.
@@ -159,7 +164,10 @@ class _MapContent extends StatelessWidget {
       onCameraCenterChanged: onCameraCenterChanged,
     );
 
-    final sidePanel = _NearbyMomentsPanel(moments: moments, onMomentSelected: onMomentSelected);
+    final sidePanel = _NearbyMomentsPanel(
+      moments: moments,
+      onMomentSelected: onMomentSelected,
+    );
 
     return SafeArea(
       child: Padding(
@@ -193,7 +201,10 @@ class _MapContent extends StatelessWidget {
 }
 
 class _NearbyMomentsPanel extends StatelessWidget {
-  const _NearbyMomentsPanel({required this.moments, required this.onMomentSelected});
+  const _NearbyMomentsPanel({
+    required this.moments,
+    required this.onMomentSelected,
+  });
 
   final List<Moment> moments;
   final ValueChanged<Moment> onMomentSelected;
@@ -217,7 +228,10 @@ class _NearbyMomentsPanel extends StatelessWidget {
             Text(context.l10n.nearbyMomentsTitle, style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             Expanded(
-              child: NearbyMomentsList(moments: moments, onMomentTap: onMomentSelected),
+              child: NearbyMomentsList(
+                moments: moments,
+                onMomentTap: onMomentSelected,
+              ),
             ),
           ],
         ),

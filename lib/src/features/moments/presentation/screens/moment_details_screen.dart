@@ -8,10 +8,7 @@ import '../widgets/moment_details_skeleton.dart';
 import '../widgets/moment_error_view.dart';
 
 class MomentDetailsScreen extends ConsumerWidget {
-  const MomentDetailsScreen({
-    required this.momentId,
-    super.key,
-  });
+  const MomentDetailsScreen({required this.momentId, super.key});
 
   final String momentId;
 
@@ -20,9 +17,7 @@ class MomentDetailsScreen extends ConsumerWidget {
     final moment = ref.watch(momentDetailsProvider(momentId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.momentDetailsTitle),
-      ),
+      appBar: AppBar(title: Text(context.l10n.momentDetailsTitle)),
       body: moment.when(
         loading: () => const MomentDetailsSkeleton(),
         error: (_, _) => MomentErrorView(

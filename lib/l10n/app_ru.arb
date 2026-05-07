@@ -29,5 +29,21 @@
   "viewMomentDetails": "Открыть детали",
   "momentDetailsTitle": "Детали момента",
   "momentDetailsLoadError": "Не удалось загрузить этот момент.",
-  "retry": "Повторить"
+  "retry": "Повторить",
+  "createMomentTooltip": "Создать момент",
+  "createMomentTitle": "Создать момент",
+  "saveDraft": "Сохранить черновик",
+  "createMomentMediaEmpty": "Добавь фото или видео",
+  "createMomentMediaError": "Не удалось показать это медиа",
+  "removeMedia": "Удалить медиа",
+  "pickPhoto": "Выбрать фото",
+  "takePhoto": "Снять фото",
+  "pickVideo": "Выбрать видео",
+  "recordVideo": "Записать видео",
+  "createMomentTextLabel": "Что здесь произошло?",
+  "createMomentEmotionLabel": "Эмоция",
+  "createMomentTextRequired": "Добавь короткое описание.",
+  "createMomentDraftInvalid": "Сначала добавь медиа и описание.",
+  "createMomentDraftSaved": "Черновик сохранен.",
+  "createMomentMediaPickError": "Не удалось выбрать медиа."
 }

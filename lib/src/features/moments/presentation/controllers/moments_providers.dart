@@ -10,11 +10,15 @@ final momentsRepositoryProvider = Provider<MomentsRepository>((ref) {
   return SupabaseMomentsRepository(ref.watch(supabaseClientProvider));
 });
 
-final nearbyMomentsProvider = FutureProvider.family<List<Moment>, MapCameraCenter>((ref, center) {
-  final repository = ref.watch(momentsRepositoryProvider);
+final nearbyMomentsProvider =
+    FutureProvider.family<List<Moment>, MapCameraCenter>((ref, center) {
+      final repository = ref.watch(momentsRepositoryProvider);
 
-  return repository.fetchNearbyMoments(latitude: center.latitude, longitude: center.longitude);
-});
+      return repository.fetchNearbyMoments(
+        latitude: center.latitude,
+        longitude: center.longitude,
+      );
+    });
 
 final momentDetailsProvider = FutureProvider.family<Moment, String>((ref, id) {
   final repository = ref.watch(momentsRepositoryProvider);

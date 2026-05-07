@@ -29,5 +29,21 @@
   "viewMomentDetails": "Ver detalles",
   "momentDetailsTitle": "Detalles del momento",
   "momentDetailsLoadError": "No se pudo cargar este momento.",
-  "retry": "Reintentar"
+  "retry": "Reintentar",
+  "createMomentTooltip": "Crear momento",
+  "createMomentTitle": "Crear momento",
+  "saveDraft": "Guardar borrador",
+  "createMomentMediaEmpty": "Agrega una foto o video",
+  "createMomentMediaError": "No se pudo mostrar este medio",
+  "removeMedia": "Quitar medio",
+  "pickPhoto": "Elegir foto",
+  "takePhoto": "Tomar foto",
+  "pickVideo": "Elegir video",
+  "recordVideo": "Grabar video",
+  "createMomentTextLabel": "¿Qué pasó aquí?",
+  "createMomentEmotionLabel": "Emoción",
+  "createMomentTextRequired": "Agrega una descripción breve.",
+  "createMomentDraftInvalid": "Agrega un medio y una descripción primero.",
+  "createMomentDraftSaved": "Borrador guardado.",
+  "createMomentMediaPickError": "No se pudo elegir el medio."
 }

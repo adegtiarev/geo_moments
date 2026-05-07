@@ -17,7 +17,11 @@ class SupabaseMomentsRepository implements MomentsRepository {
   }) async {
     final response = await _client.rpc<List<dynamic>>(
       'nearby_moments',
-      params: {'center_lat': latitude, 'center_lng': longitude, 'limit_count': limit},
+      params: {
+        'center_lat': latitude,
+        'center_lng': longitude,
+        'limit_count': limit,
+      },
     );
 
     return response

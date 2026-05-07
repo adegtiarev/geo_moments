@@ -279,6 +279,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @createMomentTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Create moment'**
+  String get createMomentTooltip;
+
+  /// No description provided for @createMomentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create moment'**
+  String get createMomentTitle;
+
+  /// No description provided for @saveDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Save draft'**
+  String get saveDraft;
+
+  /// No description provided for @createMomentMediaEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo or video'**
+  String get createMomentMediaEmpty;
+
+  /// No description provided for @createMomentMediaError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not show this media'**
+  String get createMomentMediaError;
+
+  /// No description provided for @removeMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove media'**
+  String get removeMedia;
+
+  /// No description provided for @pickPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick photo'**
+  String get pickPhoto;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get takePhoto;
+
+  /// No description provided for @pickVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick video'**
+  String get pickVideo;
+
+  /// No description provided for @recordVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Record video'**
+  String get recordVideo;
+
+  /// No description provided for @createMomentTextLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened here?'**
+  String get createMomentTextLabel;
+
+  /// No description provided for @createMomentEmotionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Emotion'**
+  String get createMomentEmotionLabel;
+
+  /// No description provided for @createMomentTextRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a short description.'**
+  String get createMomentTextRequired;
+
+  /// No description provided for @createMomentDraftInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Add media and a description first.'**
+  String get createMomentDraftInvalid;
+
+  /// No description provided for @createMomentDraftSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft saved.'**
+  String get createMomentDraftSaved;
+
+  /// No description provided for @createMomentMediaPickError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not pick media.'**
+  String get createMomentMediaPickError;
 }
 
 class _AppLocalizationsDelegate

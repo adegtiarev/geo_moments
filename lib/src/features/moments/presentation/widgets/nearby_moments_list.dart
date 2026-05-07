@@ -11,7 +11,6 @@ class NearbyMomentsList extends StatelessWidget {
   final ValueChanged<Moment>? onMomentTap;
   final List<Moment> moments;
 
-
   @override
   Widget build(BuildContext context) {
     if (moments.isEmpty) {
