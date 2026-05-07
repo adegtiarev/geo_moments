@@ -9,6 +9,7 @@ typedef MapSurfaceBuilder =
     Widget Function({
       required List<Moment> moments,
       required bool isLocationEnabled,
+      required int locationFocusRequestId,
       required ValueChanged<Moment> onMomentSelected,
       required ValueChanged<MapCameraCenter> onCameraCenterChanged,
     });
@@ -17,12 +18,14 @@ final mapSurfaceBuilderProvider = Provider<MapSurfaceBuilder>((ref) {
   return ({
     required moments,
     required isLocationEnabled,
+    required locationFocusRequestId,
     required onMomentSelected,
     required onCameraCenterChanged,
   }) {
     return MapboxMapPanel(
       moments: moments,
       isLocationEnabled: isLocationEnabled,
+      locationFocusRequestId: locationFocusRequestId,
       onMomentSelected: onMomentSelected,
       onCameraCenterChanged: onCameraCenterChanged,
     );

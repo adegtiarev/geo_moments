@@ -177,7 +177,7 @@ Flutter темы:
 
 ### 09. Create Moment: Media Capture
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -195,6 +195,8 @@ Flutter темы:
 - сохранить черновик локально в state.
 
 ### 10. Upload and Save Moment
+
+Статус: next.
 
 Flutter/Supabase темы:
 

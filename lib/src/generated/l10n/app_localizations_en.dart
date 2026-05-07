@@ -33,7 +33,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nearbyMomentsLoadError => 'Could not load moments.';
 
   @override
-  String get enableLocation => 'Enable location';
+  String get enableLocation => 'Show my location';
 
   @override
   String get locationPermissionDenied => 'Location permission is denied.';

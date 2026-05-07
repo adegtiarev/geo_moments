@@ -148,10 +148,10 @@ abstract class AppLocalizations {
   /// **'Could not load moments.'**
   String get nearbyMomentsLoadError;
 
-  /// Tooltip for the button that requests location permission
+  /// Tooltip for the button that requests location permission and centers the map on the user
   ///
   /// In en, this message translates to:
-  /// **'Enable location'**
+  /// **'Show my location'**
   String get enableLocation;
 
   /// Message shown when location permission is denied

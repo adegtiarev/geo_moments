@@ -1,6 +1,6 @@
 # 09 Create Moment: Media Capture
 
-Статус: next.
+Статус: done.
 
 ## Источники
 

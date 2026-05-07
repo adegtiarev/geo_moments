@@ -29,7 +29,7 @@
 
 ## Текущий проект
 
-Текущая стадия: завершена глава 8, следующая глава - [09 Create Moment: Media Capture](lessons/09-create-moment-media-capture.md).
+Текущая стадия: завершена глава 9, следующая глава - [10 Upload and Save Moment](lessons/10-upload-and-save-moment.md).
 
 - Flutter: 3.41.0 stable
 - Dart: 3.11.0
@@ -39,6 +39,7 @@
 - Current data: seed moments из Supabase через repository/provider layer
 - Current map: Mapbox-карта с markers, bottom sheet preview и location permission
 - Current details flow: marker/list preview открывает `/moments/:momentId`
-- Следующий feature: create flow с выбором/съемкой фото и видео, пока без upload
+- Current create flow: `/moments/new` с выбором/съемкой фото и видео, локальным draft state и validation
+- Следующий feature: upload media в Supabase Storage и insert row в `moments`
 - Push: Firebase Cloud Messaging запланирован в поздней phase
 - Platforms: Android и iOS

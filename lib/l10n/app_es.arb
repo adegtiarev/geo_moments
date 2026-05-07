@@ -8,7 +8,7 @@
   "nearbyMomentsTitle": "Momentos cercanos",
   "nearbyMomentsEmpty": "Aquí aparecerán los momentos cercanos.",
   "nearbyMomentsLoadError": "No se pudieron cargar los momentos.",
-  "enableLocation": "Activar ubicación",
+  "enableLocation": "Mostrar mi ubicación",
   "locationPermissionDenied": "El permiso de ubicación está denegado.",
   "themeSettingTitle": "Tema",
   "themeSystem": "Sistema",

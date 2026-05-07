@@ -12,6 +12,7 @@ class MapboxMapPanel extends StatefulWidget {
     required this.onMomentSelected,
     required this.onCameraCenterChanged,
     required this.isLocationEnabled,
+    required this.locationFocusRequestId,
     super.key,
   });
 
@@ -19,6 +20,7 @@ class MapboxMapPanel extends StatefulWidget {
   final ValueChanged<Moment> onMomentSelected;
   final ValueChanged<MapCameraCenter> onCameraCenterChanged;
   final bool isLocationEnabled;
+  final int locationFocusRequestId;
 
   @override
   State<MapboxMapPanel> createState() => _MapboxMapPanelState();
@@ -52,6 +54,10 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
 
     if (oldWidget.isLocationEnabled != widget.isLocationEnabled) {
       unawaited(_syncLocationPuck());
+    }
+
+    if (oldWidget.locationFocusRequestId != widget.locationFocusRequestId) {
+      unawaited(_focusLocationPuck());
     }
 
     if (oldWidget.moments != widget.moments) {
@@ -108,6 +114,9 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
     _mapboxMap = mapboxMap;
 
     await _syncLocationPuck();
+    if (widget.locationFocusRequestId > 0) {
+      await _focusLocationPuck();
+    }
 
     _circleAnnotationManager = await mapboxMap.annotations
         .createCircleAnnotationManager();
@@ -146,6 +155,22 @@ class _MapboxMapPanelState extends State<MapboxMapPanel> {
           longitude: center.coordinates.lng.toDouble(),
         ),
       );
+    });
+  }
+
+  Future<void> _focusLocationPuck() async {
+    if (!widget.isLocationEnabled || _mapboxMap == null || !mounted) {
+      return;
+    }
+
+    await _syncLocationPuck();
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _viewport = FollowPuckViewportState(zoom: 15.5, pitch: 0);
     });
   }
 

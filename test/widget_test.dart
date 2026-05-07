@@ -51,10 +51,20 @@ void main() {
         mapSurfaceBuilderProvider.overrideWithValue(({
           required moments,
           required isLocationEnabled,
+          required locationFocusRequestId,
           required onMomentSelected,
           required onCameraCenterChanged,
         }) {
-          return const Center(child: Text('Test map surface'));
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Test map surface'),
+                Text('Location enabled: $isLocationEnabled'),
+                Text('Location focus: $locationFocusRequestId'),
+              ],
+            ),
+          );
         }),
         momentDetailsProvider.overrideWith((ref, id) async {
           return testMoments.singleWhere((moment) => moment.id == id);
@@ -146,6 +156,22 @@ void main() {
     expect(find.text('Create moment'), findsOneWidget);
     expect(find.text('What happened here?'), findsOneWidget);
     expect(find.text('Add a photo or video'), findsOneWidget);
+  });
+
+  testWidgets('requests location and sends focus command to map', (
+    tester,
+  ) async {
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text('Location enabled: false'), findsOneWidget);
+    expect(find.text('Location focus: 0'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Show my location'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Location enabled: true'), findsOneWidget);
+    expect(find.text('Location focus: 1'), findsOneWidget);
   });
 
   testWidgets('requires media and text before saving draft', (tester) async {

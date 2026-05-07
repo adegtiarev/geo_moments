@@ -32,9 +32,9 @@
   "@nearbyMomentsLoadError": {
     "description": "Error state text when nearby moments cannot be loaded"
   },
-  "enableLocation": "Enable location",
+  "enableLocation": "Show my location",
   "@enableLocation": {
-    "description": "Tooltip for the button that requests location permission"
+    "description": "Tooltip for the button that requests location permission and centers the map on the user"
   },
   "locationPermissionDenied": "Location permission is denied.",
   "@locationPermissionDenied": {

@@ -33,7 +33,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nearbyMomentsLoadError => 'Не удалось загрузить моменты.';
 
   @override
-  String get enableLocation => 'Включить геолокацию';
+  String get enableLocation => 'Показать мое местоположение';
 
   @override
   String get locationPermissionDenied => 'Доступ к геолокации запрещен.';

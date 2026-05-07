@@ -27,6 +27,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   MapCameraCenter _center = MapCameraCenter.buenosAires;
   List<Moment> _visibleMoments = const [];
   bool _hasLoadedMoments = false;
+  int _locationFocusRequestId = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -55,10 +56,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           ),
           IconButton(
             tooltip: context.l10n.enableLocation,
-            onPressed: () {
-              // Запрашиваем permission по явному действию пользователя.
-              ref.read(locationPermissionControllerProvider.notifier).request();
-            },
+            onPressed: _focusUserLocation,
             icon: const Icon(Icons.my_location_outlined),
           ),
           IconButton(
@@ -77,6 +75,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           return _MapContent(
             moments: _visibleMoments,
             isLocationEnabled: isLocationEnabled,
+            locationFocusRequestId: _locationFocusRequestId,
             mapBuilder: mapBuilder,
             onMomentSelected: _showMomentPreview,
             onCameraCenterChanged: _updateCenter,
@@ -87,6 +86,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             return _MapContent(
               moments: _visibleMoments,
               isLocationEnabled: isLocationEnabled,
+              locationFocusRequestId: _locationFocusRequestId,
               mapBuilder: mapBuilder,
               onMomentSelected: _showMomentPreview,
               onCameraCenterChanged: _updateCenter,
@@ -103,6 +103,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             moments: items,
             // Этот bool пройдет дальше в MapboxMapPanel.
             isLocationEnabled: isLocationEnabled,
+            locationFocusRequestId: _locationFocusRequestId,
             mapBuilder: mapBuilder,
             onMomentSelected: _showMomentPreview,
             onCameraCenterChanged: _updateCenter,
@@ -110,6 +111,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _focusUserLocation() async {
+    final status = await ref
+        .read(locationPermissionControllerProvider.notifier)
+        .request();
+
+    if (!mounted || !status.isGranted) {
+      return;
+    }
+
+    setState(() {
+      _locationFocusRequestId += 1;
+    });
   }
 
   void _updateCenter(MapCameraCenter nextCenter) {
@@ -144,6 +159,7 @@ class _MapContent extends StatelessWidget {
   const _MapContent({
     required this.moments,
     required this.isLocationEnabled,
+    required this.locationFocusRequestId,
     required this.mapBuilder,
     required this.onMomentSelected,
     required this.onCameraCenterChanged,
@@ -151,6 +167,7 @@ class _MapContent extends StatelessWidget {
 
   final List<Moment> moments;
   final bool isLocationEnabled;
+  final int locationFocusRequestId;
   final MapSurfaceBuilder mapBuilder;
   final ValueChanged<Moment> onMomentSelected;
   final ValueChanged<MapCameraCenter> onCameraCenterChanged;
@@ -160,6 +177,7 @@ class _MapContent extends StatelessWidget {
     final map = mapBuilder(
       moments: moments,
       isLocationEnabled: isLocationEnabled,
+      locationFocusRequestId: locationFocusRequestId,
       onMomentSelected: onMomentSelected,
       onCameraCenterChanged: onCameraCenterChanged,
     );

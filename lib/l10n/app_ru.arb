@@ -8,7 +8,7 @@
   "nearbyMomentsTitle": "Моменты рядом",
   "nearbyMomentsEmpty": "Здесь появятся моменты рядом с вами.",
   "nearbyMomentsLoadError": "Не удалось загрузить моменты.",
-  "enableLocation": "Включить геолокацию",
+  "enableLocation": "Показать мое местоположение",
   "locationPermissionDenied": "Доступ к геолокации запрещен.",
   "themeSettingTitle": "Тема",
   "themeSystem": "Системная",

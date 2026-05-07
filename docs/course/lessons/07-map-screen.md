@@ -2,6 +2,8 @@
 
 Статус: done.
 
+Обновление после главы 9: location button больше не только запрашивает permission. Теперь после granted permission она отправляет `MapboxMapPanel` одноразовую команду focus на location puck через `FollowPuckViewportState`. Это нужно, чтобы перед созданием момента пользователь мог быстро поставить центр карты на свое местоположение.
+
 ## Источники
 
 Эта глава опирается на актуальные docs и package pages:
