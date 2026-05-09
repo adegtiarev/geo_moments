@@ -171,4 +171,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get momentLikeError => 'Could not update like.';
+
+  @override
+  String get commentsTitle => 'Comments';
+
+  @override
+  String get commentsEmpty => 'No comments yet.';
+
+  @override
+  String get commentInputHint => 'Write a comment';
+
+  @override
+  String get replyInputHint => 'Write a reply';
+
+  @override
+  String get sendComment => 'Send';
+
+  @override
+  String get replyToComment => 'Reply';
+
+  @override
+  String get cancelReply => 'Cancel reply';
+
+  @override
+  String get commentSendError => 'Could not send comment.';
 }

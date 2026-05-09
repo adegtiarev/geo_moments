@@ -8,9 +8,13 @@ import 'package:geo_moments/src/features/auth/domain/entities/app_user.dart';
 import 'package:geo_moments/src/features/auth/presentation/controllers/auth_providers.dart';
 import 'package:geo_moments/src/features/map/presentation/controllers/location_permission_controller.dart';
 import 'package:geo_moments/src/features/map/presentation/widgets/map_surface_builder.dart';
+import 'package:geo_moments/src/features/moments/domain/entities/create_comment_command.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment.dart';
+import 'package:geo_moments/src/features/moments/domain/entities/moment_comment.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment_like_summary.dart';
+import 'package:geo_moments/src/features/moments/domain/repositories/moment_comments_repository.dart';
 import 'package:geo_moments/src/features/moments/domain/repositories/moment_likes_repository.dart';
+import 'package:geo_moments/src/features/moments/presentation/controllers/moment_comments_controller.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moments_providers.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -74,6 +78,10 @@ void main() {
         momentLikesRepositoryProvider.overrideWithValue(
           FakeMomentLikesRepository(),
         ),
+        momentCommentsRepositoryProvider.overrideWithValue(
+          FakeMomentCommentsRepository(),
+        ),
+        momentCommentsRealtimeEnabledProvider.overrideWithValue(false),
       ],
       child: const GeoMomentsApp(),
     );
@@ -154,6 +162,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byTooltip('Like'), findsOneWidget);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -700));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Comments'), findsOneWidget);
+    expect(find.text('Write a comment'), findsOneWidget);
   });
 
   testWidgets('opens create moment screen', (tester) async {
@@ -239,6 +253,30 @@ class FakeMomentLikesRepository implements MomentLikesRepository {
       momentId: momentId,
       likeCount: 0,
       isLikedByMe: false,
+    );
+  }
+}
+
+class FakeMomentCommentsRepository implements MomentCommentsRepository {
+  @override
+  Future<List<MomentComment>> fetchCommentsPage({
+    required String momentId,
+    int limit = 20,
+    DateTime? before,
+  }) async {
+    return const [];
+  }
+
+  @override
+  Future<MomentComment> createComment(CreateCommentCommand command) async {
+    return MomentComment(
+      id: 'created-comment',
+      momentId: command.momentId,
+      authorId: 'test-user-id',
+      parentId: command.parentId,
+      body: command.body,
+      createdAt: DateTime.utc(2026, 5, 9),
+      authorDisplayName: 'Test User',
     );
   }
 }

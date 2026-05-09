@@ -758,7 +758,7 @@ packages:
     source: hosted
     version: "1.1.1"
   realtime_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: realtime_client
       sha256: "7dfccf372d2f55aacfeefb6186f65a06f3ffae383fe042dbeef9d85d33487576"

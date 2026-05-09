@@ -423,6 +423,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not update like.'**
   String get momentLikeError;
+
+  /// No description provided for @commentsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments'**
+  String get commentsTitle;
+
+  /// No description provided for @commentsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No comments yet.'**
+  String get commentsEmpty;
+
+  /// No description provided for @commentInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a comment'**
+  String get commentInputHint;
+
+  /// No description provided for @replyInputHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a reply'**
+  String get replyInputHint;
+
+  /// No description provided for @sendComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get sendComment;
+
+  /// No description provided for @replyToComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get replyToComment;
+
+  /// No description provided for @cancelReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel reply'**
+  String get cancelReply;
+
+  /// No description provided for @commentSendError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send comment.'**
+  String get commentSendError;
 }
 
 class _AppLocalizationsDelegate

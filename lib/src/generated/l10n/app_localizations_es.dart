@@ -174,4 +174,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get momentLikeError => 'No se pudo actualizar el me gusta.';
+
+  @override
+  String get commentsTitle => 'Comentarios';
+
+  @override
+  String get commentsEmpty => 'Todavía no hay comentarios.';
+
+  @override
+  String get commentInputHint => 'Escribe un comentario';
+
+  @override
+  String get replyInputHint => 'Escribe una respuesta';
+
+  @override
+  String get sendComment => 'Enviar';
+
+  @override
+  String get replyToComment => 'Responder';
+
+  @override
+  String get cancelReply => 'Cancelar respuesta';
+
+  @override
+  String get commentSendError => 'No se pudo enviar el comentario.';
 }

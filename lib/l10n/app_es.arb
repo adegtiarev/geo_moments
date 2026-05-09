@@ -53,5 +53,13 @@
   "createMomentMediaPickError": "No se pudo elegir el medio.",
   "likeMoment": "Me gusta",
   "unlikeMoment": "Quitar me gusta",
-  "momentLikeError": "No se pudo actualizar el me gusta."
+  "momentLikeError": "No se pudo actualizar el me gusta.",
+  "commentsTitle": "Comentarios",
+  "commentsEmpty": "Todavía no hay comentarios.",
+  "commentInputHint": "Escribe un comentario",
+  "replyInputHint": "Escribe una respuesta",
+  "sendComment": "Enviar",
+  "replyToComment": "Responder",
+  "cancelReply": "Cancelar respuesta",
+  "commentSendError": "No se pudo enviar el comentario."
 }

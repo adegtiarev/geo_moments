@@ -122,5 +122,13 @@
   "createMomentMediaPickError": "Could not pick media.",
   "likeMoment": "Like",
   "unlikeMoment": "Unlike",
-  "momentLikeError": "Could not update like."
+  "momentLikeError": "Could not update like.",
+  "commentsTitle": "Comments",
+  "commentsEmpty": "No comments yet.",
+  "commentInputHint": "Write a comment",
+  "replyInputHint": "Write a reply",
+  "sendComment": "Send",
+  "replyToComment": "Reply",
+  "cancelReply": "Cancel reply",
+  "commentSendError": "Could not send comment."
 }

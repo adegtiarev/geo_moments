@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `11-likes`
+Текущая стадия: `12-comments-and-replies`
 
-Глава 10 завершена пользователем и проверена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId` и create route `/moments/new` с настоящим upload/save flow.
+Глава 11 завершена пользователем и проверена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow и likes flow для moments.
 
 ## Уже сделано
 
@@ -67,23 +67,33 @@
 - Добавлен `test/create_moment_save_controller_test.dart`: fake storage и fake repository реально используются через provider overrides; rollback удаления проверяется.
 - Widget tests обновлены под `Publish`, scrollable details и location focus command.
 - Проверки после главы 10 проходили 2026-05-09: `flutter gen-l10n`, `flutter analyze`, `flutter test`.
+- Реализована глава 11: добавлены `moment_likes`, RLS policies, `moment_like_summary`, `like_moment`, `unlike_moment`, `MomentLikeSummary`, `MomentLikesRepository`, `SupabaseMomentLikesRepository`, `MomentLikeController`, `MomentLikeButton`.
+- Likes работают через idempotent commands, optimistic update, disabled button while busy и rollback при backend error.
+- `nearby_moments` обновлен для `like_count`; новая likes migration также переопределяет function, потому что уже примененные старые migrations не переисполняются.
+- Details стал устойчивее: если embedded `profiles(...)` не проходит, moment загружается fallback-запросом, а author profile дочитывается отдельно.
+- Исправлена синхронизация имени профиля: `SupabaseAuthRepository` обновляет `profiles.display_name/avatar_url` из Auth metadata; migration `202605090002_sync_profile_names_from_auth.sql` обновляет trigger и существующие profiles.
+- Убран UUID из details UI: автор показывается только как display name, а не raw id.
+- Добавлены tests для like controller и widget test details с fake likes repository через provider override.
+- Пользователь проверил вручную: details открываются, likes ставятся/убираются, имя автора совпадает с именем пользователя после sync profiles.
+- Проверки после главы 11 проходили 2026-05-09: `flutter gen-l10n`, `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: [11 Likes](lessons/11-likes.md)
+Текущая глава: [12 Comments and Replies](lessons/12-comments-and-replies.md)
 
-Цель главы: добавить idempotent like/unlike flow:
+Цель главы: добавить comments/replies flow:
 
-- добавить таблицу `moment_likes` с primary key `(moment_id, user_id)`;
-- добавить RLS policies для select authenticated и insert/delete own likes;
-- добавить RPC `moment_like_summary`, `like_moment`, `unlike_moment`;
-- обновить `nearby_moments`, чтобы он возвращал `like_count`;
-- добавить `MomentLikeSummary`, DTO и `MomentLikesRepository`;
-- реализовать Supabase repository через актуальный `rpc(...)` API;
-- добавить `MomentLikeController` с optimistic update, disabled button while busy и rollback при ошибке;
-- добавить `MomentLikeButton` в details;
-- сохранить tests через fake repository, который реально override-ит provider;
-- проверить `supabase db push`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручной Android сценарий like/unlike.
+- добавить таблицу `moment_comments`;
+- добавить one-level replies через `parent_id`;
+- защитить one-level replies database trigger-ом;
+- добавить RLS policies;
+- включить Supabase Realtime для `moment_comments`;
+- добавить RPC `moment_comments_page` и `create_moment_comment`;
+- обновить `nearby_moments`, чтобы он возвращал настоящий `comment_count`;
+- добавить domain/data/repository/controller слой для comments;
+- встроить comments section и composer в details;
+- сохранить scrollable details tests и fake repository overrides;
+- проверить `supabase db push`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручной сценарий comment/reply/realtime.
 
 ## Правило продолжения в новом чате
 
@@ -113,7 +123,7 @@ lib/src/core/backend       supabaseClientProvider
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/auth      AuthScreen, AuthRepository, AppUser, auth providers
 lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker/list preview bottom sheet
-lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow; глава 11 добавит likes
+lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow, likes flow; глава 12 добавит comments/replies
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
 pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker подключены
 supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments

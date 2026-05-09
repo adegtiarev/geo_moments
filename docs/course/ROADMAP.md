@@ -217,7 +217,7 @@ Flutter/Supabase темы:
 
 ### 11. Likes
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -233,6 +233,8 @@ Flutter темы:
 - защита от двойных taps.
 
 ### 12. Comments and Replies
+
+Статус: next.
 
 Flutter/Supabase темы:
 

@@ -171,4 +171,28 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get momentLikeError => 'Не удалось обновить лайк.';
+
+  @override
+  String get commentsTitle => 'Комментарии';
+
+  @override
+  String get commentsEmpty => 'Комментариев пока нет.';
+
+  @override
+  String get commentInputHint => 'Написать комментарий';
+
+  @override
+  String get replyInputHint => 'Написать ответ';
+
+  @override
+  String get sendComment => 'Отправить';
+
+  @override
+  String get replyToComment => 'Ответить';
+
+  @override
+  String get cancelReply => 'Отменить ответ';
+
+  @override
+  String get commentSendError => 'Не удалось отправить комментарий.';
 }

@@ -43,8 +43,14 @@ class SupabaseMomentsRepository implements MomentsRepository {
       );
       final likeSummaryJson = Map<String, dynamic>.from(likeSummary as Map);
 
+      final count = await _client.rpc<int>(
+        'moment_comment_count',
+        params: {'target_moment_id': id},
+      );
+
       return moment.copyWith(
         likeCount: (likeSummaryJson['like_count'] as num).toInt(),
+        commentCount: count,
       );
     } on PostgrestException {
       return moment;

@@ -53,5 +53,13 @@
   "createMomentMediaPickError": "Не удалось выбрать медиа.",
   "likeMoment": "Лайк",
   "unlikeMoment": "Убрать лайк",
-  "momentLikeError": "Не удалось обновить лайк."
+  "momentLikeError": "Не удалось обновить лайк.",
+  "commentsTitle": "Комментарии",
+  "commentsEmpty": "Комментариев пока нет.",
+  "commentInputHint": "Написать комментарий",
+  "replyInputHint": "Написать ответ",
+  "sendComment": "Отправить",
+  "replyToComment": "Ответить",
+  "cancelReply": "Отменить ответ",
+  "commentSendError": "Не удалось отправить комментарий."
 }
