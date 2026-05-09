@@ -1,3 +1,4 @@
+import '../entities/create_moment_command.dart';
 import '../entities/moment.dart';
 
 abstract interface class MomentsRepository {
@@ -8,4 +9,6 @@ abstract interface class MomentsRepository {
   });
 
   Future<Moment> fetchMomentById(String id);
+
+  Future<Moment> createMoment(CreateMomentCommand command);
 }

@@ -42,6 +42,10 @@ class CreateMomentDraftController extends Notifier<CreateMomentDraft> {
     state = const CreateMomentDraft();
   }
 
+  void setLocation({required double latitude, required double longitude}) {
+    state = state.copyWith(latitude: latitude, longitude: longitude);
+  }
+
   Future<void> pickImageFromGallery() {
     return _pickMedia(
       () => ref.read(momentMediaPickerProvider).pickImageFromGallery(),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/controllers/auth_providers.dart';
 import '../../features/auth/presentation/screens/auth_screen.dart';
+import '../../features/map/domain/entities/map_camera_center.dart';
 import '../../features/map/presentation/screens/map_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/moments/presentation/screens/moment_details_screen.dart';
@@ -14,12 +15,25 @@ abstract final class AppRoutePaths {
   static const auth = '/auth';
   static const map = '/';
   static const settings = '/settings';
+  static const createMomentPath = '/moments/new';
   static const momentDetailsPattern = '/moments/:momentId';
+
+  static String createMoment({
+    required double latitude,
+    required double longitude,
+  }) {
+    return Uri(
+      path: createMomentPath,
+      queryParameters: {
+        'lat': latitude.toString(),
+        'lng': longitude.toString(),
+      },
+    ).toString();
+  }
+
   static String momentDetails(String momentId) {
     return '/moments/${Uri.encodeComponent(momentId)}';
   }
-
-  static const createMoment = '/moments/new';
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -68,8 +82,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
-        path: AppRoutePaths.createMoment,
-        builder: (context, state) => const CreateMomentScreen(),
+        path: AppRoutePaths.createMomentPath,
+        builder: (context, state) {
+          final latitude = double.tryParse(
+            state.uri.queryParameters['lat'] ?? '',
+          );
+          final longitude = double.tryParse(
+            state.uri.queryParameters['lng'] ?? '',
+          );
+
+          return CreateMomentScreen(
+            latitude: latitude ?? MapCameraCenter.buenosAires.latitude,
+            longitude: longitude ?? MapCameraCenter.buenosAires.longitude,
+          );
+        },
       ),
       GoRoute(
         path: AppRoutePaths.momentDetailsPattern,

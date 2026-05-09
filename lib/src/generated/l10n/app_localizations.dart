@@ -298,6 +298,36 @@ abstract class AppLocalizations {
   /// **'Save draft'**
   String get saveDraft;
 
+  /// No description provided for @publishMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get publishMoment;
+
+  /// No description provided for @createMomentUploadingMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading media...'**
+  String get createMomentUploadingMedia;
+
+  /// No description provided for @createMomentSavingMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving moment...'**
+  String get createMomentSavingMoment;
+
+  /// No description provided for @createMomentSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Moment published.'**
+  String get createMomentSaved;
+
+  /// No description provided for @createMomentSaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not publish this moment.'**
+  String get createMomentSaveError;
+
   /// No description provided for @createMomentMediaEmpty.
   ///
   /// In en, this message translates to:

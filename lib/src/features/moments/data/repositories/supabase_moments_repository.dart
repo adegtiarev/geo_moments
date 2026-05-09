@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../domain/entities/create_moment_command.dart';
 import '../../domain/entities/moment.dart';
 import '../../domain/repositories/moments_repository.dart';
 import '../dto/moment_dto.dart';
@@ -51,5 +52,44 @@ class SupabaseMomentsRepository implements MomentsRepository {
         .single();
 
     return MomentDto.fromDetailsJson(response).toDomain();
+  }
+
+  @override
+  Future<Moment> createMoment(CreateMomentCommand command) async {
+    final response = await _client
+        .from('moments')
+        .insert({
+          'author_id': command.authorId,
+          'latitude': command.latitude,
+          'longitude': command.longitude,
+          'text': command.text.trim(),
+          'emotion': _nullableTrim(command.emotion),
+          'media_url': command.mediaUrl,
+          'media_type': command.mediaType,
+        })
+        .select('''
+        id,
+        author_id,
+        latitude,
+        longitude,
+        text,
+        emotion,
+        media_url,
+        media_type,
+        created_at,
+        profiles(display_name, avatar_url)
+      ''')
+        .single();
+
+    return MomentDto.fromDetailsJson(response).toDomain();
+  }
+
+  String? _nullableTrim(String? value) {
+    final trimmed = value?.trim();
+    if (trimmed == null || trimmed.isEmpty) {
+      return null;
+    }
+
+    return trimmed;
   }
 }

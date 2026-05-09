@@ -174,14 +174,16 @@ void main() {
     expect(find.text('Location focus: 1'), findsOneWidget);
   });
 
-  testWidgets('requires media and text before saving draft', (tester) async {
+  testWidgets('requires media and text before publishing moment', (
+    tester,
+  ) async {
     await tester.pumpWidget(buildTestApp());
     await tester.pumpAndSettle();
 
     await tester.tap(find.byTooltip('Create moment'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Save draft'));
+    await tester.tap(find.text('Publish'));
     await tester.pumpAndSettle();
 
     expect(find.text('Add a short description.'), findsOneWidget);

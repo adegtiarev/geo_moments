@@ -110,6 +110,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get saveDraft => 'Сохранить черновик';
 
   @override
+  String get publishMoment => 'Опубликовать';
+
+  @override
+  String get createMomentUploadingMedia => 'Загружаем медиа...';
+
+  @override
+  String get createMomentSavingMoment => 'Сохраняем момент...';
+
+  @override
+  String get createMomentSaved => 'Момент опубликован.';
+
+  @override
+  String get createMomentSaveError => 'Не удалось опубликовать этот момент.';
+
+  @override
   String get createMomentMediaEmpty => 'Добавь фото или видео';
 
   @override

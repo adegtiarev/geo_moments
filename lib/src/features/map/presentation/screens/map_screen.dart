@@ -51,7 +51,14 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         actions: [
           IconButton(
             tooltip: context.l10n.createMomentTooltip,
-            onPressed: () => context.push(AppRoutePaths.createMoment),
+            onPressed: () {
+              context.push(
+                AppRoutePaths.createMoment(
+                  latitude: _center.latitude,
+                  longitude: _center.longitude,
+                ),
+              );
+            },
             icon: const Icon(Icons.add_location_alt_outlined),
           ),
           IconButton(

@@ -112,6 +112,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saveDraft => 'Guardar borrador';
 
   @override
+  String get publishMoment => 'Publicar';
+
+  @override
+  String get createMomentUploadingMedia => 'Subiendo medio...';
+
+  @override
+  String get createMomentSavingMoment => 'Guardando momento...';
+
+  @override
+  String get createMomentSaved => 'Momento publicado.';
+
+  @override
+  String get createMomentSaveError => 'No se pudo publicar este momento.';
+
+  @override
   String get createMomentMediaEmpty => 'Agrega una foto o video';
 
   @override

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/backend/supabase_client_provider.dart';
 import '../../../map/domain/entities/map_camera_center.dart';
 import '../../data/repositories/supabase_moments_repository.dart';
+import '../../data/services/moment_media_storage.dart';
+import '../../data/services/supabase_moment_media_storage.dart';
 import '../../domain/entities/moment.dart';
 import '../../domain/repositories/moments_repository.dart';
 
@@ -23,4 +25,8 @@ final nearbyMomentsProvider =
 final momentDetailsProvider = FutureProvider.family<Moment, String>((ref, id) {
   final repository = ref.watch(momentsRepositoryProvider);
   return repository.fetchMomentById(id);
+});
+
+final momentMediaStorageProvider = Provider<MomentMediaStorage>((ref) {
+  return SupabaseMomentMediaStorage(ref.watch(supabaseClientProvider));
 });

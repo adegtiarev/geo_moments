@@ -6,10 +6,18 @@ import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../core/ui/app_breakpoints.dart';
 import '../../../../core/ui/app_spacing.dart';
 import '../controllers/create_moment_draft_controller.dart';
+import '../controllers/create_moment_save_controller.dart';
 import '../widgets/create_moment_media_preview.dart';
 
 class CreateMomentScreen extends ConsumerStatefulWidget {
-  const CreateMomentScreen({super.key});
+  const CreateMomentScreen({
+    required this.latitude,
+    required this.longitude,
+    super.key,
+  });
+
+  final double latitude;
+  final double longitude;
 
   @override
   ConsumerState<CreateMomentScreen> createState() => _CreateMomentScreenState();
@@ -29,7 +37,9 @@ class _CreateMomentScreenState extends ConsumerState<CreateMomentScreen> {
     _emotionController = TextEditingController(text: draft.emotion);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(createMomentDraftControllerProvider.notifier).restoreLostData();
+      ref.read(createMomentDraftControllerProvider.notifier)
+        ..setLocation(latitude: widget.latitude, longitude: widget.longitude)
+        ..restoreLostData();
     });
   }
 
@@ -43,14 +53,15 @@ class _CreateMomentScreenState extends ConsumerState<CreateMomentScreen> {
   @override
   Widget build(BuildContext context) {
     final draft = ref.watch(createMomentDraftControllerProvider);
+    final saveState = ref.watch(createMomentSaveControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.createMomentTitle),
         actions: [
           TextButton(
-            onPressed: () => _saveDraft(context, draft.canSaveDraft),
-            child: Text(context.l10n.saveDraft),
+            onPressed: saveState.isSubmitting ? null : () => _publish(context),
+            child: Text(context.l10n.publishMoment),
           ),
         ],
       ),
@@ -67,6 +78,15 @@ class _CreateMomentScreenState extends ConsumerState<CreateMomentScreen> {
                 child: ListView(
                   padding: const EdgeInsets.all(AppSpacing.lg),
                   children: [
+                    if (saveState.isSubmitting) ...[
+                      LinearProgressIndicator(value: saveState.progress),
+                      const SizedBox(height: AppSpacing.sm),
+                      if (saveState.step == CreateMomentSaveStep.uploadingMedia)
+                        Text(context.l10n.createMomentUploadingMedia),
+                      if (saveState.step == CreateMomentSaveStep.savingMoment)
+                        Text(context.l10n.createMomentSavingMoment),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
                     CreateMomentMediaPreview(
                       media: draft.media,
                       onClear: () {
@@ -137,18 +157,35 @@ class _CreateMomentScreenState extends ConsumerState<CreateMomentScreen> {
     );
   }
 
-  void _saveDraft(BuildContext context, bool canSaveDraft) {
+  Future<void> _publish(BuildContext context) async {
     final isFormValid = _formKey.currentState?.validate() ?? false;
-    if (!isFormValid || !canSaveDraft) {
+    final draft = ref.read(createMomentDraftControllerProvider);
+
+    if (!isFormValid || !draft.canSubmit) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.createMomentDraftInvalid)),
       );
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.createMomentDraftSaved)),
-    );
+    final moment = await ref
+        .read(createMomentSaveControllerProvider.notifier)
+        .submit();
+
+    if (!context.mounted) {
+      return;
+    }
+
+    if (moment == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.createMomentSaveError)),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.createMomentSaved)));
     context.pop();
   }
 
