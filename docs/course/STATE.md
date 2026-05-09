@@ -1,12 +1,12 @@
 # Course State
 
-Последнее обновление: 2026-05-07
+Последнее обновление: 2026-05-09
 
 ## Статус
 
-Текущая стадия: `10-upload-and-save-moment`
+Текущая стадия: `11-likes`
 
-Глава 9 завершена пользователем и проверена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId` и create route `/moments/new` с локальным media draft.
+Глава 10 завершена пользователем и проверена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId` и create route `/moments/new` с настоящим upload/save flow.
 
 ## Уже сделано
 
@@ -56,26 +56,34 @@
 - Ограничена высота create media preview, чтобы form fields были доступны в widget tests и на широких viewport.
 - Перед главой 10 исправлен UX location button: кнопка теперь не только запрашивает permission, но и отправляет карте одноразовую команду focus на текущий location puck через `FollowPuckViewportState`; tooltip обновлен на "Show my location".
 - Проверки после главы 9 проходили: `flutter analyze`, `flutter test`.
+- Реализована глава 10: добавлена migration `202605070001_moment_media_storage_policies.sql` для `moment-media` upload/select/delete policies.
+- Create route `/moments/new` получает `lat/lng` query parameters; create button на карте передает текущий `_center`, а router fallback-ит к Buenos Aires при отсутствующих координатах.
+- `CreateMomentDraft` хранит `latitude`/`longitude` и использует `canSubmit`; `CreateMomentScreen` принимает coordinates, выставляет их в draft controller и публикует через `Publish`.
+- Добавлены `UploadedMomentMedia`, `CreateMomentCommand`, `MomentMediaStorage`, `SupabaseMomentMediaStorage`, `createMomentSaveControllerProvider`.
+- `SupabaseMomentMediaStorage` загружает local file в Supabase Storage через `upload(..., FileOptions(cacheControl, upsert: false, contentType))`, получает public URL через `getPublicUrl` и умеет `remove` для rollback.
+- `MomentsRepository.createMoment` и `SupabaseMomentsRepository.createMoment` делают insert row в `moments` через `.insert(...).select(...).single()`.
+- Save controller показывает stages `uploadingMedia`/`savingMoment`, сбрасывает draft и invalidates nearby moments после успеха.
+- Если insert row падает после upload, controller удаляет загруженный object через `MomentMediaStorage.remove`.
+- Добавлен `test/create_moment_save_controller_test.dart`: fake storage и fake repository реально используются через provider overrides; rollback удаления проверяется.
+- Widget tests обновлены под `Publish`, scrollable details и location focus command.
+- Проверки после главы 10 проходили 2026-05-09: `flutter gen-l10n`, `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: [10 Upload and Save Moment](lessons/10-upload-and-save-moment.md)
+Текущая глава: [11 Likes](lessons/11-likes.md)
 
-Цель главы: превратить локальный create draft в настоящий Supabase save flow:
+Цель главы: добавить idempotent like/unlike flow:
 
-- добавить storage policies для `moment-media`;
-- передать текущий center карты в create route как `lat/lng`;
-- добавить coordinates в `CreateMomentDraft`;
-- создать `MomentMediaStorage` и `SupabaseMomentMediaStorage`;
-- загрузить local media file в Supabase Storage;
-- получить public URL через `getPublicUrl`;
-- добавить `MomentsRepository.createMoment`;
-- сделать insert row в `moments` через `.insert(...).select(...).single()`;
-- показать stage progress upload/save;
-- сделать rollback удаления файла через `remove`, если insert упал;
-- сбросить draft и invalidated nearby moments после успеха;
-- сохранить tests через fake storage/repository;
-- проверка `supabase db push`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручная Android-проверка upload/save.
+- добавить таблицу `moment_likes` с primary key `(moment_id, user_id)`;
+- добавить RLS policies для select authenticated и insert/delete own likes;
+- добавить RPC `moment_like_summary`, `like_moment`, `unlike_moment`;
+- обновить `nearby_moments`, чтобы он возвращал `like_count`;
+- добавить `MomentLikeSummary`, DTO и `MomentLikesRepository`;
+- реализовать Supabase repository через актуальный `rpc(...)` API;
+- добавить `MomentLikeController` с optimistic update, disabled button while busy и rollback при ошибке;
+- добавить `MomentLikeButton` в details;
+- сохранить tests через fake repository, который реально override-ит provider;
+- проверить `supabase db push`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручной Android сценарий like/unlike.
 
 ## Правило продолжения в новом чате
 
@@ -105,7 +113,7 @@ lib/src/core/backend       supabaseClientProvider
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/auth      AuthScreen, AuthRepository, AppUser, auth providers
 lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker/list preview bottom sheet
-lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow; глава 10 добавит upload/save flow
+lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow; глава 11 добавит likes
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
 pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker подключены
 supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments

@@ -20,7 +20,8 @@ class MomentDetailsScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(context.l10n.momentDetailsTitle)),
       body: moment.when(
         loading: () => const MomentDetailsSkeleton(),
-        error: (_, _) => MomentErrorView(
+        error: (error, _) => MomentErrorView(
+          error: error,
           onRetry: () => ref.invalidate(momentDetailsProvider(momentId)),
         ),
         data: (moment) => MomentDetailsContent(moment: moment),

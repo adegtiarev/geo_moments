@@ -405,6 +405,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not pick media.'**
   String get createMomentMediaPickError;
+
+  /// No description provided for @likeMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'Like'**
+  String get likeMoment;
+
+  /// No description provided for @unlikeMoment.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlike'**
+  String get unlikeMoment;
+
+  /// No description provided for @momentLikeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update like.'**
+  String get momentLikeError;
 }
 
 class _AppLocalizationsDelegate

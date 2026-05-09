@@ -165,4 +165,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get createMomentMediaPickError => 'No se pudo elegir el medio.';
+
+  @override
+  String get likeMoment => 'Me gusta';
+
+  @override
+  String get unlikeMoment => 'Quitar me gusta';
+
+  @override
+  String get momentLikeError => 'No se pudo actualizar el me gusta.';
 }

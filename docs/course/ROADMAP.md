@@ -196,7 +196,7 @@ Flutter темы:
 
 ### 10. Upload and Save Moment
 
-Статус: next.
+Статус: done.
 
 Flutter/Supabase темы:
 
@@ -216,6 +216,8 @@ Flutter/Supabase темы:
 ## Phase 4: Social interactions without becoming a social network
 
 ### 11. Likes
+
+Статус: next.
 
 Flutter темы:
 

@@ -50,5 +50,8 @@
   "createMomentTextRequired": "Добавь короткое описание.",
   "createMomentDraftInvalid": "Сначала добавь медиа и описание.",
   "createMomentDraftSaved": "Черновик сохранен.",
-  "createMomentMediaPickError": "Не удалось выбрать медиа."
+  "createMomentMediaPickError": "Не удалось выбрать медиа.",
+  "likeMoment": "Лайк",
+  "unlikeMoment": "Убрать лайк",
+  "momentLikeError": "Не удалось обновить лайк."
 }

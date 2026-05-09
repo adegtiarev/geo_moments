@@ -28,4 +28,27 @@ class Moment {
   final String? authorAvatarUrl;
   final int likeCount;
   final int commentCount;
+
+  Moment copyWith({
+    String? authorDisplayName,
+    String? authorAvatarUrl,
+    int? likeCount,
+    int? commentCount,
+  }) {
+    return Moment(
+      id: id,
+      authorId: authorId,
+      latitude: latitude,
+      longitude: longitude,
+      text: text,
+      mediaType: mediaType,
+      createdAt: createdAt,
+      emotion: emotion,
+      mediaUrl: mediaUrl,
+      authorDisplayName: authorDisplayName ?? this.authorDisplayName,
+      authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
+      likeCount: likeCount ?? this.likeCount,
+      commentCount: commentCount ?? this.commentCount,
+    );
+  }
 }

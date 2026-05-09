@@ -162,4 +162,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get createMomentMediaPickError => 'Не удалось выбрать медиа.';
+
+  @override
+  String get likeMoment => 'Лайк';
+
+  @override
+  String get unlikeMoment => 'Убрать лайк';
+
+  @override
+  String get momentLikeError => 'Не удалось обновить лайк.';
 }

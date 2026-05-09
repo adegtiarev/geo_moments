@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/ui/app_spacing.dart';
 import '../../domain/entities/moment.dart';
 import 'moment_media_view.dart';
+import 'moment_like_button.dart';
 
 class MomentDetailsContent extends StatelessWidget {
   const MomentDetailsContent({required this.moment, super.key});
@@ -13,7 +14,7 @@ class MomentDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final author = moment.authorDisplayName ?? moment.authorId;
+    final author = moment.authorDisplayName;
     final localeName = Localizations.localeOf(context).toString();
     final createdAt = DateFormat.yMMMMd(
       localeName,
@@ -26,8 +27,10 @@ class MomentDetailsContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         Text(moment.text, style: textTheme.headlineSmall),
         const SizedBox(height: AppSpacing.sm),
-        Text(author, style: textTheme.titleMedium),
-        const SizedBox(height: AppSpacing.xs),
+        if (author != null && author.trim().isNotEmpty) ...[
+          Text(author, style: textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.xs),
+        ],
         Text(createdAt, style: textTheme.bodySmall),
         if (moment.emotion != null) ...[
           const SizedBox(height: AppSpacing.md),
@@ -39,7 +42,7 @@ class MomentDetailsContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
-            _Metric(icon: Icons.favorite_border, value: moment.likeCount),
+            MomentLikeButton(moment: moment),
             const SizedBox(width: AppSpacing.lg),
             _Metric(
               icon: Icons.mode_comment_outlined,

@@ -40,8 +40,15 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Stream<AppUser?> watchCurrentUser() {
-    return _client.auth.onAuthStateChange.map((state) {
-      return _mapUser(state.session?.user);
+    return _client.auth.onAuthStateChange.asyncMap((state) async {
+      final user = state.session?.user;
+      final appUser = _mapUser(user);
+
+      if (user != null && appUser != null) {
+        await _syncProfile(appUser);
+      }
+
+      return appUser;
     });
   }
 
@@ -68,5 +75,31 @@ class SupabaseAuthRepository implements AuthRepository {
   String? _metadataString(Map<String, dynamic> metadata, String key) {
     final value = metadata[key];
     return value is String ? value : null;
+  }
+
+  Future<void> _syncProfile(AppUser user) async {
+    final values = <String, dynamic>{};
+    final displayName = user.displayName?.trim();
+    final avatarUrl = user.avatarUrl?.trim();
+
+    if (displayName != null && displayName.isNotEmpty) {
+      values['display_name'] = displayName;
+    }
+
+    if (avatarUrl != null && avatarUrl.isNotEmpty) {
+      values['avatar_url'] = avatarUrl;
+    }
+
+    if (values.isEmpty) {
+      return;
+    }
+
+    try {
+      await _client.from('profiles').update(values).eq('id', user.id);
+    } on PostgrestException {
+      // The database trigger creates profiles on sign-up. If the row is not
+      // available yet, auth should still continue and the next auth event can
+      // sync it.
+    }
   }
 }

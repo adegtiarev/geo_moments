@@ -119,5 +119,8 @@
   "createMomentTextRequired": "Add a short description.",
   "createMomentDraftInvalid": "Add media and a description first.",
   "createMomentDraftSaved": "Draft saved.",
-  "createMomentMediaPickError": "Could not pick media."
+  "createMomentMediaPickError": "Could not pick media.",
+  "likeMoment": "Like",
+  "unlikeMoment": "Unlike",
+  "momentLikeError": "Could not update like."
 }

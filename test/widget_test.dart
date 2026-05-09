@@ -9,6 +9,8 @@ import 'package:geo_moments/src/features/auth/presentation/controllers/auth_prov
 import 'package:geo_moments/src/features/map/presentation/controllers/location_permission_controller.dart';
 import 'package:geo_moments/src/features/map/presentation/widgets/map_surface_builder.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment.dart';
+import 'package:geo_moments/src/features/moments/domain/entities/moment_like_summary.dart';
+import 'package:geo_moments/src/features/moments/domain/repositories/moment_likes_repository.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moments_providers.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -69,6 +71,9 @@ void main() {
         momentDetailsProvider.overrideWith((ref, id) async {
           return testMoments.singleWhere((moment) => moment.id == id);
         }),
+        momentLikesRepositoryProvider.overrideWithValue(
+          FakeMomentLikesRepository(),
+        ),
       ],
       child: const GeoMomentsApp(),
     );
@@ -144,6 +149,11 @@ void main() {
 
     expect(find.text('Test coffee moment'), findsOneWidget);
     expect(find.text('Test User'), findsOneWidget);
+
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Like'), findsOneWidget);
   });
 
   testWidgets('opens create moment screen', (tester) async {
@@ -201,5 +211,34 @@ class _TestLocationPermissionController extends LocationPermissionController {
   Future<PermissionStatus> request() async {
     state = const AsyncData(PermissionStatus.granted);
     return PermissionStatus.granted;
+  }
+}
+
+class FakeMomentLikesRepository implements MomentLikesRepository {
+  @override
+  Future<MomentLikeSummary> fetchSummary(String momentId) async {
+    return MomentLikeSummary(
+      momentId: momentId,
+      likeCount: 0,
+      isLikedByMe: false,
+    );
+  }
+
+  @override
+  Future<MomentLikeSummary> likeMoment(String momentId) async {
+    return MomentLikeSummary(
+      momentId: momentId,
+      likeCount: 1,
+      isLikedByMe: true,
+    );
+  }
+
+  @override
+  Future<MomentLikeSummary> unlikeMoment(String momentId) async {
+    return MomentLikeSummary(
+      momentId: momentId,
+      likeCount: 0,
+      isLikedByMe: false,
+    );
   }
 }

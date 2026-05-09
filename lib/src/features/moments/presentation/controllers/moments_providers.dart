@@ -2,10 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/backend/supabase_client_provider.dart';
 import '../../../map/domain/entities/map_camera_center.dart';
+import '../../data/repositories/supabase_moment_likes_repository.dart';
 import '../../data/repositories/supabase_moments_repository.dart';
 import '../../data/services/moment_media_storage.dart';
 import '../../data/services/supabase_moment_media_storage.dart';
 import '../../domain/entities/moment.dart';
+import '../../domain/repositories/moment_likes_repository.dart';
 import '../../domain/repositories/moments_repository.dart';
 
 final momentsRepositoryProvider = Provider<MomentsRepository>((ref) {
@@ -29,4 +31,8 @@ final momentDetailsProvider = FutureProvider.family<Moment, String>((ref, id) {
 
 final momentMediaStorageProvider = Provider<MomentMediaStorage>((ref) {
   return SupabaseMomentMediaStorage(ref.watch(supabaseClientProvider));
+});
+
+final momentLikesRepositoryProvider = Provider<MomentLikesRepository>((ref) {
+  return SupabaseMomentLikesRepository(ref.watch(supabaseClientProvider));
 });

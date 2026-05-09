@@ -50,5 +50,8 @@
   "createMomentTextRequired": "Agrega una descripción breve.",
   "createMomentDraftInvalid": "Agrega un medio y una descripción primero.",
   "createMomentDraftSaved": "Borrador guardado.",
-  "createMomentMediaPickError": "No se pudo elegir el medio."
+  "createMomentMediaPickError": "No se pudo elegir el medio.",
+  "likeMoment": "Me gusta",
+  "unlikeMoment": "Quitar me gusta",
+  "momentLikeError": "No se pudo actualizar el me gusta."
 }

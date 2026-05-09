@@ -34,24 +34,84 @@ class SupabaseMomentsRepository implements MomentsRepository {
 
   @override
   Future<Moment> fetchMomentById(String id) async {
-    final response = await _client
-        .from('moments')
-        .select('''
-        id,
-        author_id,
-        latitude,
-        longitude,
-        text,
-        emotion,
-        media_url,
-        media_type,
-        created_at,
-        profiles(display_name, avatar_url)
-      ''')
-        .eq('id', id)
-        .single();
+    final moment = await _fetchMomentDetails(id);
 
-    return MomentDto.fromDetailsJson(response).toDomain();
+    try {
+      final likeSummary = await _client.rpc<dynamic>(
+        'moment_like_summary',
+        params: {'target_moment_id': id},
+      );
+      final likeSummaryJson = Map<String, dynamic>.from(likeSummary as Map);
+
+      return moment.copyWith(
+        likeCount: (likeSummaryJson['like_count'] as num).toInt(),
+      );
+    } on PostgrestException {
+      return moment;
+    }
+  }
+
+  Future<Moment> _fetchMomentDetails(String id) async {
+    try {
+      final response = await _client
+          .from('moments')
+          .select('''
+          id,
+          author_id,
+          latitude,
+          longitude,
+          text,
+          emotion,
+          media_url,
+          media_type,
+          created_at,
+          profiles(display_name, avatar_url)
+        ''')
+          .eq('id', id)
+          .single();
+
+      return MomentDto.fromDetailsJson(response).toDomain();
+    } on PostgrestException {
+      final response = await _client
+          .from('moments')
+          .select('''
+          id,
+          author_id,
+          latitude,
+          longitude,
+          text,
+          emotion,
+          media_url,
+          media_type,
+          created_at
+        ''')
+          .eq('id', id)
+          .single();
+
+      final moment = MomentDto.fromDetailsJson(response).toDomain();
+      return _withAuthorProfile(moment);
+    }
+  }
+
+  Future<Moment> _withAuthorProfile(Moment moment) async {
+    try {
+      final response = await _client
+          .from('profiles')
+          .select('display_name, avatar_url')
+          .eq('id', moment.authorId)
+          .maybeSingle();
+
+      if (response == null) {
+        return moment;
+      }
+
+      return moment.copyWith(
+        authorDisplayName: response['display_name'] as String?,
+        authorAvatarUrl: response['avatar_url'] as String?,
+      );
+    } on PostgrestException {
+      return moment;
+    }
   }
 
   @override
