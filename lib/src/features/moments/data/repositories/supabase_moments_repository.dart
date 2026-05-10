@@ -71,7 +71,7 @@ class SupabaseMomentsRepository implements MomentsRepository {
           media_url,
           media_type,
           created_at,
-          profiles(display_name, avatar_url)
+          profiles!moments_author_id_fkey(display_name, avatar_url)
         ''')
           .eq('id', id)
           .single();
@@ -134,20 +134,20 @@ class SupabaseMomentsRepository implements MomentsRepository {
           'media_type': command.mediaType,
         })
         .select('''
-        id,
-        author_id,
-        latitude,
-        longitude,
-        text,
-        emotion,
-        media_url,
-        media_type,
-        created_at,
-        profiles(display_name, avatar_url)
-      ''')
+          id,
+          author_id,
+          latitude,
+          longitude,
+          text,
+          emotion,
+          media_url,
+          media_type,
+          created_at
+        ''')
         .single();
 
-    return MomentDto.fromDetailsJson(response).toDomain();
+    final moment = MomentDto.fromDetailsJson(response).toDomain();
+    return _withAuthorProfile(moment);
   }
 
   String? _nullableTrim(String? value) {

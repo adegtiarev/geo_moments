@@ -130,5 +130,10 @@
   "sendComment": "Send",
   "replyToComment": "Reply",
   "cancelReply": "Cancel reply",
-  "commentSendError": "Could not send comment."
+  "commentSendError": "Could not send comment.",
+  "notificationsTitle": "Notifications",
+  "notificationsEnabled": "Notifications enabled",
+  "notificationsDisabled": "Notifications disabled",
+  "notificationsAsk": "Enable notifications",
+  "notificationsPermissionDenied": "Notifications are blocked in system settings."
 }

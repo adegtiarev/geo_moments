@@ -195,4 +195,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get commentSendError => 'Не удалось отправить комментарий.';
+
+  @override
+  String get notificationsTitle => 'Уведомления';
+
+  @override
+  String get notificationsEnabled => 'Уведомления включены';
+
+  @override
+  String get notificationsDisabled => 'Уведомления выключены';
+
+  @override
+  String get notificationsAsk => 'Включить уведомления';
+
+  @override
+  String get notificationsPermissionDenied =>
+      'Уведомления заблокированы в настройках системы.';
 }

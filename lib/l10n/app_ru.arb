@@ -61,5 +61,10 @@
   "sendComment": "Отправить",
   "replyToComment": "Ответить",
   "cancelReply": "Отменить ответ",
-  "commentSendError": "Не удалось отправить комментарий."
+  "commentSendError": "Не удалось отправить комментарий.",
+  "notificationsTitle": "Уведомления",
+  "notificationsEnabled": "Уведомления включены",
+  "notificationsDisabled": "Уведомления выключены",
+  "notificationsAsk": "Включить уведомления",
+  "notificationsPermissionDenied": "Уведомления заблокированы в настройках системы."
 }

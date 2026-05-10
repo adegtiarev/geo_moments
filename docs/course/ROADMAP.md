@@ -234,7 +234,7 @@ Flutter темы:
 
 ### 12. Comments and Replies
 
-Статус: next.
+Статус: done.
 
 Flutter/Supabase темы:
 
@@ -253,6 +253,8 @@ Flutter/Supabase темы:
 ## Phase 5: Notifications and app lifecycle
 
 ### 13. Firebase Push
+
+Статус: next.
 
 Flutter/Firebase темы:
 

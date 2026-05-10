@@ -1,6 +1,6 @@
 # 12 Comments and Replies
 
-Статус: next.
+Статус: done.
 
 ## Что строим
 
@@ -1137,7 +1137,7 @@ class MomentCommentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final author = comment.authorDisplayName ?? comment.authorId;
+    final author = comment.authorDisplayName?.trim();
     final localeName = Localizations.localeOf(context).toString();
     final createdAt = DateFormat.yMMMd(
       localeName,
@@ -1151,8 +1151,10 @@ class MomentCommentTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(author, style: textTheme.titleSmall),
-          const SizedBox(height: AppSpacing.xs),
+          if (author != null && author.isNotEmpty) ...[
+            Text(author, style: textTheme.titleSmall),
+            const SizedBox(height: AppSpacing.xs),
+          ],
           Text(comment.body),
           const SizedBox(height: AppSpacing.xs),
           Row(
@@ -1174,7 +1176,7 @@ class MomentCommentTile extends StatelessWidget {
 }
 ```
 
-Для production UI позже можно заменить UUID fallback на hidden author, как мы сделали в details author. В этой главе лучше сначала стабилизировать data flow.
+Если `authorDisplayName` отсутствует, автора лучше не показывать, чем выводить raw UUID. UUID полезен для backend debugging, но в UI он выглядит как техническая ошибка.
 
 ### Шаг 18. Создать comments list
 
@@ -1312,7 +1314,7 @@ class _MomentDetailsContentState extends ConsumerState<MomentDetailsContent> {
         if (_replyTarget != null) ...[
           const SizedBox(height: AppSpacing.sm),
           InputChip(
-            label: Text('${context.l10n.replyToComment}: ${_replyTarget!.authorDisplayName ?? ''}'),
+            label: Text(_replyTargetLabel(context, _replyTarget!)),
             onDeleted: () {
               setState(() {
                 _replyTarget = null;
@@ -1347,6 +1349,15 @@ class _MomentDetailsContentState extends ConsumerState<MomentDetailsContent> {
         ),
       ],
     );
+  }
+
+  String _replyTargetLabel(BuildContext context, MomentComment target) {
+    final author = target.authorDisplayName?.trim();
+    if (author == null || author.isEmpty) {
+      return context.l10n.replyToComment;
+    }
+
+    return '${context.l10n.replyToComment}: $author';
   }
 }
 ```

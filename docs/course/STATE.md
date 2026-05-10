@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `12-comments-and-replies`
+Текущая стадия: `13-firebase-push`
 
-Глава 11 завершена пользователем и проверена. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow и likes flow для moments.
+Глава 12 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments и comments/replies flow с Supabase Realtime.
 
 ## Уже сделано
 
@@ -76,24 +76,29 @@
 - Добавлены tests для like controller и widget test details с fake likes repository через provider override.
 - Пользователь проверил вручную: details открываются, likes ставятся/убираются, имя автора совпадает с именем пользователя после sync profiles.
 - Проверки после главы 11 проходили 2026-05-09: `flutter gen-l10n`, `flutter analyze`, `flutter test`.
+- Реализована глава 12: добавлена migration `202605090003_create_moment_comments.sql`, таблица `moment_comments`, RLS policies, trigger `validate_moment_comment_parent` для ограничения replies одним уровнем, Supabase Realtime publication для `public.moment_comments`.
+- Добавлены RPC `moment_comments_page`, `create_moment_comment`, `moment_comment_count`; `nearby_moments` переопределен так, чтобы возвращать настоящий `comment_count`.
+- Добавлены `MomentComment`, `CreateCommentCommand`, `MomentCommentDto`, `MomentCommentsRepository`, `SupabaseMomentCommentsRepository`, `MomentCommentsController`.
+- Details показывает comments section, comment input, reply mode и обновляет comments через realtime refresh открытого обсуждения.
+- Widget tests продолжают учитывать scrollable details; `test/moment_comments_controller_test.dart` использует fake repository через provider overrides и проверяет root comment, reply и rollback state при ошибке.
+- Перед главой 13 исправлен fallback автора в comments UI: если `authorDisplayName` отсутствует, raw UUID автора не показывается.
+- Пользователь сообщил, что Supabase migration применена, RLS включен, replies связаны через `parent_id`, realtime publication проверена через `pg_publication_tables`, details/likes/comments/replies работают вручную.
+- Проверки после главы 12 в этом чате прошли 2026-05-09: `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: [12 Comments and Replies](lessons/12-comments-and-replies.md)
+Текущая глава: [13 Firebase Push](lessons/13-firebase-push.md)
 
-Цель главы: добавить comments/replies flow:
+Цель главы: добавить push notifications foundation:
 
-- добавить таблицу `moment_comments`;
-- добавить one-level replies через `parent_id`;
-- защитить one-level replies database trigger-ом;
-- добавить RLS policies;
-- включить Supabase Realtime для `moment_comments`;
-- добавить RPC `moment_comments_page` и `create_moment_comment`;
-- обновить `nearby_moments`, чтобы он возвращал настоящий `comment_count`;
-- добавить domain/data/repository/controller слой для comments;
-- встроить comments section и composer в details;
-- сохранить scrollable details tests и fake repository overrides;
-- проверить `supabase db push`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручной сценарий comment/reply/realtime.
+- подключить Firebase/FCM через FlutterFire CLI;
+- добавить permission flow для push notifications;
+- получить и сохранить FCM token в Supabase;
+- хранить push tokens с RLS так, чтобы пользователь видел только свои tokens;
+- добавить Supabase Edge Function для отправки push по новому comment/reply;
+- открыть `/moments/:momentId` из notification tap;
+- сохранить тестируемую архитектуру через repository/controller/provider слой;
+- проверить `supabase db push`, `supabase functions deploy`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручной сценарий test notification/comment push.
 
 ## Правило продолжения в новом чате
 
@@ -123,7 +128,8 @@ lib/src/core/backend       supabaseClientProvider
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/auth      AuthScreen, AuthRepository, AppUser, auth providers
 lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker/list preview bottom sheet
-lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow, likes flow; глава 12 добавит comments/replies
+lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow, likes flow, comments/replies flow
+lib/src/features/notifications   планируется в главе 13: FCM token registration, permission controller, notification tap routing
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
 pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker подключены
 supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments

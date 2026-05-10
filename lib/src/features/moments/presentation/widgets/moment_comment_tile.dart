@@ -20,7 +20,7 @@ class MomentCommentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final author = comment.authorDisplayName ?? comment.authorId;
+    final author = comment.authorDisplayName?.trim();
     final localeName = Localizations.localeOf(context).toString();
     final createdAt = DateFormat.yMMMd(
       localeName,
@@ -34,8 +34,10 @@ class MomentCommentTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(author, style: textTheme.titleSmall),
-          const SizedBox(height: AppSpacing.xs),
+          if (author != null && author.isNotEmpty) ...[
+            Text(author, style: textTheme.titleSmall),
+            const SizedBox(height: AppSpacing.xs),
+          ],
           Text(comment.body),
           const SizedBox(height: AppSpacing.xs),
           Row(

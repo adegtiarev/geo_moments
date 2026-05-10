@@ -99,9 +99,7 @@ class _MomentDetailsContentState extends ConsumerState<MomentDetailsContent> {
         if (_replyTarget != null) ...[
           const SizedBox(height: AppSpacing.sm),
           InputChip(
-            label: Text(
-              '${context.l10n.replyToComment}: ${_replyTarget!.authorDisplayName ?? ''}',
-            ),
+            label: Text(_replyTargetLabel(context, _replyTarget!)),
             onDeleted: () {
               setState(() {
                 _replyTarget = null;
@@ -147,6 +145,15 @@ class _MomentDetailsContentState extends ConsumerState<MomentDetailsContent> {
         ),
       ],
     );
+  }
+
+  String _replyTargetLabel(BuildContext context, MomentComment target) {
+    final author = target.authorDisplayName?.trim();
+    if (author == null || author.isEmpty) {
+      return context.l10n.replyToComment;
+    }
+
+    return '${context.l10n.replyToComment}: $author';
   }
 }
 

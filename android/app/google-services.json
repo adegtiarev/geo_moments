@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "634940259860",
+    "project_id": "geo-moments",
+    "storage_bucket": "geo-moments.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634940259860:android:10af2d2bda4a739490b101",
+        "android_client_info": {
+          "package_name": "arg.adegtiarev.geo_moments"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634940259860-fs8itmgu0osbao062o22e0q1ksdk0f30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaaMh7HsPMBUaEw4kygTOc_zXi2WGFWGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634940259860-fs8itmgu0osbao062o22e0q1ksdk0f30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

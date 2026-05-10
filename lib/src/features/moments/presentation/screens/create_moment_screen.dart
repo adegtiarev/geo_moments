@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -177,8 +178,15 @@ class _CreateMomentScreenState extends ConsumerState<CreateMomentScreen> {
     }
 
     if (moment == null) {
+      final error = ref.read(createMomentSaveControllerProvider).error;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.createMomentSaveError)),
+        SnackBar(
+          content: Text(
+            kDebugMode && error != null
+                ? '${context.l10n.createMomentSaveError} $error'
+                : context.l10n.createMomentSaveError,
+          ),
+        ),
       );
       return;
     }

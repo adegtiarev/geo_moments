@@ -471,6 +471,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not send comment.'**
   String get commentSendError;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications enabled'**
+  String get notificationsEnabled;
+
+  /// No description provided for @notificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications disabled'**
+  String get notificationsDisabled;
+
+  /// No description provided for @notificationsAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notifications'**
+  String get notificationsAsk;
+
+  /// No description provided for @notificationsPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are blocked in system settings.'**
+  String get notificationsPermissionDenied;
 }
 
 class _AppLocalizationsDelegate

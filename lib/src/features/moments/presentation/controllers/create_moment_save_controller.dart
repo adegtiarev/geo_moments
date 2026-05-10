@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../auth/presentation/controllers/auth_providers.dart';
 import '../../domain/entities/create_moment_command.dart';
@@ -109,6 +110,8 @@ class CreateMomentSaveController extends Notifier<CreateMomentSaveState> {
 
       return moment;
     } catch (error) {
+      debugPrint('Create moment failed: $error');
+
       if (uploadedMedia != null) {
         await ref.read(momentMediaStorageProvider).remove(uploadedMedia.path);
       }

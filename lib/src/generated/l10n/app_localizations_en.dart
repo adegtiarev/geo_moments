@@ -195,4 +195,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commentSendError => 'Could not send comment.';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsEnabled => 'Notifications enabled';
+
+  @override
+  String get notificationsDisabled => 'Notifications disabled';
+
+  @override
+  String get notificationsAsk => 'Enable notifications';
+
+  @override
+  String get notificationsPermissionDenied =>
+      'Notifications are blocked in system settings.';
 }

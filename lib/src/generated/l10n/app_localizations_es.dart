@@ -198,4 +198,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get commentSendError => 'No se pudo enviar el comentario.';
+
+  @override
+  String get notificationsTitle => 'Notificaciones';
+
+  @override
+  String get notificationsEnabled => 'Notificaciones activadas';
+
+  @override
+  String get notificationsDisabled => 'Notificaciones desactivadas';
+
+  @override
+  String get notificationsAsk => 'Activar notificaciones';
+
+  @override
+  String get notificationsPermissionDenied =>
+      'Las notificaciones están bloqueadas en los ajustes del sistema.';
 }

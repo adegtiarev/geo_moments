@@ -61,5 +61,10 @@
   "sendComment": "Enviar",
   "replyToComment": "Responder",
   "cancelReply": "Cancelar respuesta",
-  "commentSendError": "No se pudo enviar el comentario."
+  "commentSendError": "No se pudo enviar el comentario.",
+  "notificationsTitle": "Notificaciones",
+  "notificationsEnabled": "Notificaciones activadas",
+  "notificationsDisabled": "Notificaciones desactivadas",
+  "notificationsAsk": "Activar notificaciones",
+  "notificationsPermissionDenied": "Las notificaciones están bloqueadas en los ajustes del sistema."
 }

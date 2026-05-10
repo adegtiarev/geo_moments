@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geo_moments/src/app/app.dart';
 import 'package:geo_moments/src/app/config/app_config.dart';
 import 'package:geo_moments/src/app/localization/locale_controller.dart';
@@ -16,6 +17,11 @@ import 'package:geo_moments/src/features/moments/domain/repositories/moment_comm
 import 'package:geo_moments/src/features/moments/domain/repositories/moment_likes_repository.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moment_comments_controller.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moments_providers.dart';
+import 'package:geo_moments/src/features/notifications/data/services/push_messaging_client.dart';
+import 'package:geo_moments/src/features/notifications/domain/entities/push_permission_status.dart';
+import 'package:geo_moments/src/features/notifications/domain/entities/push_token_registration.dart';
+import 'package:geo_moments/src/features/notifications/domain/repositories/push_tokens_repository.dart';
+import 'package:geo_moments/src/features/notifications/presentation/controllers/push_notifications_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -45,11 +51,21 @@ void main() {
     ),
   ];
 
-  Widget buildTestApp({AppUser? currentUser = testUser}) {
+  Widget buildTestApp({
+    AppUser? currentUser = testUser,
+    RemoteMessage? initialNotificationMessage,
+  }) {
     return ProviderScope(
       overrides: [
         appConfigProvider.overrideWithValue(testAppConfig),
-        currentUserProvider.overrideWith((ref) => Stream.value(currentUser)),
+        notificationTapStreamProvider.overrideWithValue(const Stream.empty()),
+        initialNotificationMessageProvider.overrideWithValue(
+          Future.value(initialNotificationMessage),
+        ),
+        if (initialNotificationMessage == null)
+          currentUserProvider.overrideWith((ref) => Stream.value(currentUser))
+        else
+          currentUserProvider.overrideWithValue(AsyncData(currentUser)),
         nearbyMomentsProvider.overrideWith((ref, center) async => testMoments),
         locationPermissionControllerProvider.overrideWith(
           _TestLocationPermissionController.new,
@@ -82,6 +98,12 @@ void main() {
           FakeMomentCommentsRepository(),
         ),
         momentCommentsRealtimeEnabledProvider.overrideWithValue(false),
+        pushMessagingClientProvider.overrideWithValue(
+          FakePushMessagingClient(),
+        ),
+        pushTokensRepositoryProvider.overrideWithValue(
+          FakePushTokensRepository(),
+        ),
       ],
       child: const GeoMomentsApp(),
     );
@@ -117,6 +139,8 @@ void main() {
     expect(find.text('System'), findsWidgets);
     expect(find.text('Light'), findsOneWidget);
     expect(find.text('Dark'), findsOneWidget);
+    expect(find.text('Notifications'), findsOneWidget);
+    expect(find.text('Enable notifications'), findsOneWidget);
     expect(find.text('Backend'), findsOneWidget);
     expect(find.text('Supabase configured: test.supabase.co'), findsOneWidget);
   });
@@ -128,8 +152,17 @@ void main() {
     await tester.tap(find.byTooltip('Settings'));
     await tester.pumpAndSettle();
 
-    // Open the language dropdown.
-    await tester.tap(find.byType(DropdownMenu<LocalePreference>));
+    await tester.ensureVisible(find.byType(DropdownMenu<LocalePreference>));
+    await tester.pumpAndSettle();
+
+    // Open the language dropdown from its editable field. Tapping the
+    // DropdownMenu wrapper itself can miss after Settings becomes scrollable.
+    await tester.tap(
+      find.descendant(
+        of: find.byType(DropdownMenu<LocalePreference>),
+        matching: find.byType(TextField),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // Select Russian from the menu.
@@ -168,6 +201,23 @@ void main() {
 
     expect(find.text('Comments'), findsOneWidget);
     expect(find.text('Write a comment'), findsOneWidget);
+  });
+
+  testWidgets('opens moment details from initial notification', (tester) async {
+    await tester.pumpWidget(
+      buildTestApp(
+        initialNotificationMessage: const RemoteMessage(
+          data: {'moment_id': 'test-moment-id'},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Moment details'), findsOneWidget);
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Test coffee moment'), findsOneWidget);
   });
 
   testWidgets('opens create moment screen', (tester) async {
@@ -279,4 +329,29 @@ class FakeMomentCommentsRepository implements MomentCommentsRepository {
       authorDisplayName: 'Test User',
     );
   }
+}
+
+class FakePushMessagingClient implements PushMessagingClient {
+  @override
+  Future<PushPermissionStatus> getPermissionStatus() async {
+    return PushPermissionStatus.denied;
+  }
+
+  @override
+  Future<PushPermissionStatus> requestPermission() async {
+    return PushPermissionStatus.denied;
+  }
+
+  @override
+  Future<String?> getToken() async {
+    return null;
+  }
+
+  @override
+  Stream<String> get onTokenRefresh => const Stream.empty();
+}
+
+class FakePushTokensRepository implements PushTokensRepository {
+  @override
+  Future<void> upsertToken(PushTokenRegistration registration) async {}
 }
