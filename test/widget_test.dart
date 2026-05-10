@@ -1,3 +1,4 @@
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,16 +6,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geo_moments/src/app/app.dart';
 import 'package:geo_moments/src/app/config/app_config.dart';
 import 'package:geo_moments/src/app/localization/locale_controller.dart';
+import 'package:geo_moments/src/core/database/app_database.dart';
 import 'package:geo_moments/src/features/auth/domain/entities/app_user.dart';
 import 'package:geo_moments/src/features/auth/presentation/controllers/auth_providers.dart';
 import 'package:geo_moments/src/features/map/presentation/controllers/location_permission_controller.dart';
 import 'package:geo_moments/src/features/map/presentation/widgets/map_surface_builder.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/create_comment_command.dart';
+import 'package:geo_moments/src/features/moments/domain/entities/create_moment_command.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment_comment.dart';
 import 'package:geo_moments/src/features/moments/domain/entities/moment_like_summary.dart';
 import 'package:geo_moments/src/features/moments/domain/repositories/moment_comments_repository.dart';
 import 'package:geo_moments/src/features/moments/domain/repositories/moment_likes_repository.dart';
+import 'package:geo_moments/src/features/moments/domain/repositories/moments_repository.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moment_comments_controller.dart';
 import 'package:geo_moments/src/features/moments/presentation/controllers/moments_providers.dart';
 import 'package:geo_moments/src/features/notifications/data/services/push_messaging_client.dart';
@@ -56,9 +60,13 @@ void main() {
     AppUser? currentUser = testUser,
     RemoteMessage? initialNotificationMessage,
   }) {
+    final database = AppDatabase(NativeDatabase.memory());
+    addTearDown(database.close);
+
     return ProviderScope(
       overrides: [
         appConfigProvider.overrideWithValue(testAppConfig),
+        appDatabaseProvider.overrideWithValue(database),
         notificationTapStreamProvider.overrideWithValue(const Stream.empty()),
         initialNotificationMessageProvider.overrideWithValue(
           Future.value(initialNotificationMessage),
@@ -67,7 +75,9 @@ void main() {
           currentUserProvider.overrideWith((ref) => Stream.value(currentUser))
         else
           currentUserProvider.overrideWithValue(AsyncData(currentUser)),
-        nearbyMomentsProvider.overrideWith((ref, center) async => testMoments),
+        momentsRepositoryProvider.overrideWithValue(
+          FakeMomentsRepository(testMoments),
+        ),
         locationPermissionControllerProvider.overrideWith(
           _TestLocationPermissionController.new,
         ),
@@ -88,9 +98,6 @@ void main() {
               ],
             ),
           );
-        }),
-        momentDetailsProvider.overrideWith((ref, id) async {
-          return testMoments.singleWhere((moment) => moment.id == id);
         }),
         momentLikesRepositoryProvider.overrideWithValue(
           FakeMomentLikesRepository(),
@@ -328,6 +335,42 @@ class _TestLocationPermissionController extends LocationPermissionController {
   Future<PermissionStatus> request() async {
     state = const AsyncData(PermissionStatus.granted);
     return PermissionStatus.granted;
+  }
+}
+
+class FakeMomentsRepository implements MomentsRepository {
+  const FakeMomentsRepository(this.moments);
+
+  final List<Moment> moments;
+
+  @override
+  Future<List<Moment>> fetchNearbyMoments({
+    required double latitude,
+    required double longitude,
+    int limit = 50,
+  }) async {
+    return moments.take(limit).toList();
+  }
+
+  @override
+  Future<Moment> fetchMomentById(String id) async {
+    return moments.singleWhere((moment) => moment.id == id);
+  }
+
+  @override
+  Future<Moment> createMoment(CreateMomentCommand command) async {
+    return Moment(
+      id: 'created-moment-id',
+      authorId: command.authorId,
+      latitude: command.latitude,
+      longitude: command.longitude,
+      text: command.text,
+      emotion: command.emotion,
+      mediaUrl: command.mediaUrl,
+      mediaType: command.mediaType,
+      createdAt: DateTime.utc(2026, 5, 10),
+      authorDisplayName: 'Test User',
+    );
   }
 }
 

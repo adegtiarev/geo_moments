@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `15-tablet-landscape-ui-polish`
+Текущая стадия: `16-local-cache`
 
-Глава 14 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies и reliability layer для lifecycle, permissions, retry, failures и logging.
+Глава 15 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet на compact phone, wide/tablet side detail panel, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies и reliability layer для lifecycle, permissions, retry, failures и logging.
 
 ## Уже сделано
 
@@ -102,19 +102,27 @@
 - Push/create logging переведен с прямого `debugPrint` на `AppLogger`; FCM token логируется только коротким prefix.
 - Добавлен `test/app_lifecycle_test.dart` с реальным `main()` и fake lifecycle service через provider override.
 - Проверено после главы 14 2026-05-10: `flutter gen-l10n`, `dart format lib test`, `flutter analyze`, `flutter test`.
+- Реализована глава 15: `AppBreakpoints` расширен до window class и `useSidePanel`, `MapScreen` хранит выбранный moment и выбирает tap handler по layout.
+- Compact phone layout сохраняет bottom sheet preview и route `/moments/:momentId`; tablet/wide landscape показывает карту и side panel рядом.
+- Добавлен `MomentDetailsPane`, который использует существующий `momentDetailsProvider` и `MomentDetailsContent`, поэтому details route, fallback optional profile/RPC и scrollable comments не дублируются.
+- `MomentMediaView` получил стабильный `AspectRatio`, `maxHeight` и localized semantics labels для image/video/missing media.
+- Добавлены EN/RU/ES строки для selected moment panel, close tooltip, map semantics и media semantics.
+- Widget tests покрывают tablet side panel, compact phone preview sheet, semantic label карты и продолжают использовать fake map/provider overrides.
+- Route order `/moments/new` перед `/moments/:momentId` сохранен; location button по-прежнему отправляет focus command карте.
+- Проверено после главы 15 2026-05-10: `flutter gen-l10n`, `dart format lib test docs/course`, `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: 15 Tablet, Landscape, and UI Polish
+Текущая глава: 16 Local Cache
 
-Цель главы: улучшить adaptive UI и визуальную полировку:
+Цель главы: добавить локальный read-side cache для moments:
 
-- tablet layout: карта + detail panel;
-- landscape layout без наложений;
-- проверка текстов EN/RU/ES;
-- media aspect ratios;
-- accessibility basics;
-- сохранить scrollable details/settings tests, route order `/moments/new` перед `/moments/:momentId`, notification tap flow и reliability behavior главы 14.
+- Drift/SQLite foundation;
+- cached nearby moments при старте или слабой сети;
+- stale-while-revalidate: сначала cache, затем Supabase refresh;
+- details fallback на cached moment без поломки optional profile/RPC fallback;
+- cache update после успешного create moment;
+- сохранить compact bottom sheet preview, tablet/wide side panel, route order `/moments/new` перед `/moments/:momentId`, notification tap flow, scrollable details/comments и location focus behavior.
 
 ## Правило продолжения в новом чате
 

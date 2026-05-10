@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:geo_moments/src/app/config/app_config.dart';
 import 'package:geo_moments/src/features/auth/domain/entities/app_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -39,17 +41,37 @@ class SupabaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Stream<AppUser?> watchCurrentUser() {
-    return _client.auth.onAuthStateChange.asyncMap((state) async {
-      final user = state.session?.user;
-      final appUser = _mapUser(user);
+  Stream<AppUser?> watchCurrentUser() async* {
+    var lastKnownUser = currentUser;
+    if (lastKnownUser != null) {
+      unawaited(_syncProfile(lastKnownUser));
+    }
+    yield lastKnownUser;
 
-      if (user != null && appUser != null) {
-        await _syncProfile(appUser);
+    await for (final state in _client.auth.onAuthStateChange) {
+      if (state.event == AuthChangeEvent.signedOut) {
+        lastKnownUser = null;
+        yield null;
+        continue;
       }
 
-      return appUser;
-    });
+      final user = state.session?.user;
+      final appUser = _mapUser(user) ?? currentUser;
+
+      if (appUser != null) {
+        lastKnownUser = appUser;
+        unawaited(_syncProfile(appUser));
+        yield appUser;
+        continue;
+      }
+
+      if (lastKnownUser != null) {
+        yield lastKnownUser;
+        continue;
+      }
+
+      yield null;
+    }
   }
 
   AppUser? _mapUser(User? user) {
@@ -96,10 +118,10 @@ class SupabaseAuthRepository implements AuthRepository {
 
     try {
       await _client.from('profiles').update(values).eq('id', user.id);
-    } on PostgrestException {
+    } catch (_) {
       // The database trigger creates profiles on sign-up. If the row is not
-      // available yet, auth should still continue and the next auth event can
-      // sync it.
+      // available yet, or if the device is offline, auth should still continue.
+      // A later auth event can sync it when the backend is reachable.
     }
   }
 }

@@ -293,7 +293,7 @@ Flutter темы:
 
 ### 15. Tablet, Landscape, and UI Polish
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -311,6 +311,8 @@ Flutter темы:
 - polish темной/светлой темы.
 
 ### 16. Local Cache
+
+Статус: next.
 
 Flutter темы:
 

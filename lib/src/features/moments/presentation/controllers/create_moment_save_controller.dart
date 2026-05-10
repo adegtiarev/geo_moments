@@ -100,6 +100,19 @@ class CreateMomentSaveController extends Notifier<CreateMomentSaveState> {
             ),
           );
 
+      try {
+        await ref.read(momentsCacheProvider).upsertMoment(moment);
+      } catch (error, stackTrace) {
+        ref
+            .read(appLoggerProvider)
+            .warning(
+              'Cache created moment failed',
+              error: error,
+              stackTrace: stackTrace,
+              context: {'momentId': moment.id},
+            );
+      }
+
       ref.invalidate(nearbyMomentsProvider);
       ref.read(createMomentDraftControllerProvider.notifier).reset();
 

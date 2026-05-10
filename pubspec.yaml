@@ -25,12 +25,17 @@ dependencies:
   realtime_client: ^2.7.3
   firebase_core: ^4.7.0
   firebase_messaging: ^16.2.0
+  drift: ^2.33.0
+  drift_flutter: ^0.3.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  drift_dev: ^2.33.0
+  build_runner: ^2.15.0
 
 flutter:
   generate: true
