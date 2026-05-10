@@ -312,7 +312,7 @@ Flutter темы:
 
 ### 16. Local Cache
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 
@@ -331,6 +331,8 @@ Flutter темы:
 
 ### 17. Testing and Quality Gate
 
+Статус: done.
+
 Flutter темы:
 
 - unit tests;
@@ -345,6 +347,8 @@ Flutter темы:
 - добавить README для запуска тестов.
 
 ### 18. Release Preparation
+
+Статус: next.
 
 Flutter темы:
 

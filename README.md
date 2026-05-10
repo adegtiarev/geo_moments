@@ -22,7 +22,27 @@ Planned stack:
 - Flutter + Riverpod
 - Supabase Auth/Postgres/Storage/Realtime
 - Firebase Cloud Messaging
+- Camera photo/video
 - Mapbox
+- Drift/SQLite local read cache
 - English/Russian/Spanish localization
 - Light/dark theme
 - Phone/tablet and portrait/landscape support
+
+## Development checks
+
+Run these before considering a course chapter complete:
+
+```bash
+dart run build_runner build
+flutter gen-l10n
+dart format lib test docs/course
+flutter analyze
+flutter test
+```
+
+Use `flutter run` for manual checks involving Mapbox, camera/media capture, OAuth, push notifications, and platform permissions.
+
+## Required environment
+
+Copy `.env.example` to `.env` and fill in the local Supabase and Mapbox values. Do not commit `.env`, Firebase service account JSON files, or Supabase service role secrets.

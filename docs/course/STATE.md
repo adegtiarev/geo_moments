@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `16-local-cache`
+Текущая стадия: `18-release-preparation`
 
-Глава 15 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet на compact phone, wide/tablet side detail panel, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies и reliability layer для lifecycle, permissions, retry, failures и logging.
+Глава 17 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet на compact phone, wide/tablet side detail panel, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies, reliability layer для lifecycle, permissions, retry, failures и logging, Drift/SQLite read-side cache для nearby moments/details с stale-while-revalidate flow, а также выделенные test helpers и quality gate в README.
 
 ## Уже сделано
 
@@ -110,19 +110,37 @@
 - Widget tests покрывают tablet side panel, compact phone preview sheet, semantic label карты и продолжают использовать fake map/provider overrides.
 - Route order `/moments/new` перед `/moments/:momentId` сохранен; location button по-прежнему отправляет focus command карте.
 - Проверено после главы 15 2026-05-10: `flutter gen-l10n`, `dart format lib test docs/course`, `flutter analyze`, `flutter test`.
+- Реализована глава 16: добавлены зависимости `drift`, `drift_flutter`, `path_provider`, `drift_dev`, `build_runner`.
+- Добавлены `lib/src/core/database/app_database.dart` и generated `app_database.g.dart`; локальная таблица `CachedMoments` использует getter `body` с SQL name `text`, чтобы не конфликтовать с `Table.text()`.
+- Добавлен `MomentsCache` с `readNearbyMoments`, `readMomentById`, `replaceNearbyMoments` и `upsertMoment`, который маппит Drift rows обратно в domain `Moment`.
+- `nearbyMomentsProvider` переведен на Riverpod 3 `AsyncNotifierProvider.family`; family argument `MapCameraCenter` передается в constructor `NearbyMomentsController`.
+- Nearby moments используют stale-while-revalidate: сначала читают cache, затем фоном обновляются из Supabase и записывают fresh data в cache; remote failure не стирает уже показанный cache.
+- `momentDetailsProvider` переведен на `MomentDetailsController`: details открываются из cache без ожидания remote, а fresh remote details обновляют cache.
+- `CreateMomentSaveController` записывает успешно созданный moment в cache и логирует cache-write failure без отката успешного backend insert.
+- `SupabaseAuthRepository.watchCurrentUser()` больше не блокирует offline startup на `_syncProfile`; transient null session не выбрасывает пользователя на login, а явный signed out обрабатывается отдельно.
+- Добавлены tests `moments_cache_test.dart`, `nearby_moments_cache_test.dart`, `moment_details_cache_test.dart`; widget tests используют in-memory Drift database и fake repository overrides.
+- Старые Supabase migration-файлы не менялись для локального cache; route order `/moments/new` перед `/moments/:momentId`, compact bottom sheet preview, tablet/wide side panel и location focus behavior сохранены.
+- Проверено после главы 16 2026-05-10: `dart run build_runner build`, `flutter gen-l10n`, `dart format lib test docs/course`, `flutter analyze`, `flutter test` прошли. После проверки `git status --short` был чистым.
+- Реализована глава 17: общие fake repositories, test data и `pumpGeoMomentsTestApp` вынесены в `test/helpers`.
+- `widget_test.dart` стал сценарным и использует общий helper вместо локального набора fake classes.
+- Добавлены/сохранены regression tests для compact bottom sheet preview, tablet side panel, route order `/moments/new` перед `/moments/:momentId`, notification tap details route, location focus command и semantics label карты.
+- Cache provider tests усилены сценариями stale cache -> remote refresh для nearby moments и details; tests используют `Completer` и `container.listen`, а не произвольные задержки.
+- `README.md` дополнен quality gate командами, Drift/SQLite cache в стеке и предупреждением не коммитить `.env`, Firebase service account JSON или service role secrets.
+- Во время проверки исправлено: test `cached details remain visible when comments are unavailable` теперь явно выставляет compact phone viewport перед ожиданием bottom sheet; удалены duplicate imports в cache tests; semantics test теперь закрывает `SemanticsHandle` внутри body теста.
+- Проверено после главы 17 2026-05-10: `dart run build_runner build`, `flutter gen-l10n`, `dart format lib test docs/course`, `flutter analyze`, `flutter test` прошли.
 
 ## Следующая глава
 
-Текущая глава: 16 Local Cache
+Текущая глава: 18 Release Preparation
 
-Цель главы: добавить локальный read-side cache для moments:
+Цель главы: подготовить release-ready MVP:
 
-- Drift/SQLite foundation;
-- cached nearby moments при старте или слабой сети;
-- stale-while-revalidate: сначала cache, затем Supabase refresh;
-- details fallback на cached moment без поломки optional profile/RPC fallback;
-- cache update после успешного create moment;
-- сохранить compact bottom sheet preview, tablet/wide side panel, route order `/moments/new` перед `/moments/:momentId`, notification tap flow, scrollable details/comments и location focus behavior.
+- app icon и splash;
+- Android signing/release build;
+- iOS bundle id/capabilities/release checklist;
+- build flavors/env handling;
+- финальный GitHub README как portfolio project;
+- сохранить текущий quality gate, route order, offline cache, compact/wide layout, notification routing и отсутствие secrets в Git.
 
 ## Правило продолжения в новом чате
 
@@ -149,6 +167,7 @@ lib/src/app/bootstrap      Supabase initialization
 lib/src/generated/l10n     generated AppLocalizations
 lib/l10n                   ARB-файлы EN/RU/ES
 lib/src/core/backend       supabaseClientProvider
+lib/src/core/database      Drift AppDatabase, CachedMoments table, generated app_database.g.dart
 lib/src/core/lifecycle     app lifecycle service/providers
 lib/src/core/logging       AppLogger, DebugAppLogger, appLoggerProvider
 lib/src/core/network       AppFailure, localized failure messages, RetryPolicy
@@ -156,9 +175,10 @@ lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/auth      AuthScreen, AuthRepository, AppUser, auth providers
 lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker/list preview bottom sheet
 lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow, likes flow, comments/replies flow
+lib/src/features/moments/data/local   MomentsCache для Drift read-side cache
 lib/src/features/notifications   FCM token registration, permission controller, notification tap routing, Settings notification tile
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
-pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker, firebase_core, firebase_messaging подключены
+pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker, firebase_core, firebase_messaging, drift, drift_flutter, path_provider, drift_dev, build_runner подключены
 supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments, moment_likes, moment_comments, push_tokens
 supabase/functions         send-comment-push Edge Function для FCM HTTP v1 push по comments/replies
 docs/course/...            документация курса
