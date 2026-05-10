@@ -76,5 +76,12 @@
   "notificationsEnabled": "Уведомления включены",
   "notificationsDisabled": "Уведомления выключены",
   "notificationsAsk": "Включить уведомления",
-  "notificationsPermissionDenied": "Уведомления заблокированы в настройках системы."
+  "notificationsPermissionDenied": "Уведомления заблокированы в настройках системы.",
+  "selectedMomentTitle": "Выбранный момент",
+  "selectedMomentEmpty": "Выберите момент на карте.",
+  "closeMomentPanel": "Закрыть панель момента",
+  "mapSemanticLabel": "Карта моментов рядом",
+  "momentMediaImageLabel": "Медиа момента",
+  "momentMediaVideoLabel": "Превью видео момента",
+  "momentMediaMissingLabel": "Момент без медиа"
 }

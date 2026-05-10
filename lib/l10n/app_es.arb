@@ -76,5 +76,12 @@
   "notificationsEnabled": "Notificaciones activadas",
   "notificationsDisabled": "Notificaciones desactivadas",
   "notificationsAsk": "Activar notificaciones",
-  "notificationsPermissionDenied": "Las notificaciones están bloqueadas en los ajustes del sistema."
+  "notificationsPermissionDenied": "Las notificaciones están bloqueadas en los ajustes del sistema.",
+  "selectedMomentTitle": "Momento seleccionado",
+  "selectedMomentEmpty": "Selecciona un momento en el mapa.",
+  "closeMomentPanel": "Cerrar panel del momento",
+  "mapSemanticLabel": "Mapa de momentos cercanos",
+  "momentMediaImageLabel": "Contenido del momento",
+  "momentMediaVideoLabel": "Vista previa del video del momento",
+  "momentMediaMissingLabel": "Momento sin contenido"
 }

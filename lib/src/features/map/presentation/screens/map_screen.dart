@@ -13,6 +13,7 @@ import '../../../../core/ui/app_radius.dart';
 import '../../../../core/ui/app_spacing.dart';
 import '../../../moments/domain/entities/moment.dart';
 import '../../../moments/presentation/controllers/moments_providers.dart';
+import '../../../moments/presentation/widgets/moment_details_pane.dart';
 import '../../../moments/presentation/widgets/nearby_moments_list.dart';
 import '../../../moments/presentation/widgets/retry_error_view.dart';
 import '../../domain/entities/map_camera_center.dart';
@@ -33,6 +34,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   List<Moment> _visibleMoments = const [];
   bool _hasLoadedMoments = false;
   int _locationFocusRequestId = 0;
+  Moment? _selectedMoment;
 
   @override
   Widget build(BuildContext context) {
@@ -101,22 +103,28 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 }
 
                 return _MapContent(
+                  selectedMoment: _selectedMoment,
+                  onMomentSelectedForPanel: _selectMomentForPanel,
+                  onCompactMomentSelected: _showMomentPreview,
+                  onCloseSelectedMoment: _clearSelectedMoment,
                   moments: _visibleMoments,
                   isLocationEnabled: isLocationEnabled,
                   locationFocusRequestId: _locationFocusRequestId,
                   mapBuilder: mapBuilder,
-                  onMomentSelected: _showMomentPreview,
                   onCameraCenterChanged: _updateCenter,
                 );
               },
               error: (error, stackTrace) {
                 if (_hasLoadedMoments) {
                   return _MapContent(
+                    selectedMoment: _selectedMoment,
+                    onMomentSelectedForPanel: _selectMomentForPanel,
+                    onCompactMomentSelected: _showMomentPreview,
+                    onCloseSelectedMoment: _clearSelectedMoment,
                     moments: _visibleMoments,
                     isLocationEnabled: isLocationEnabled,
                     locationFocusRequestId: _locationFocusRequestId,
                     mapBuilder: mapBuilder,
-                    onMomentSelected: _showMomentPreview,
                     onCameraCenterChanged: _updateCenter,
                   );
                 }
@@ -133,12 +141,15 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 _hasLoadedMoments = true;
 
                 return _MapContent(
+                  selectedMoment: _selectedMoment,
+                  onMomentSelectedForPanel: _selectMomentForPanel,
+                  onCompactMomentSelected: _showMomentPreview,
+                  onCloseSelectedMoment: _clearSelectedMoment,
                   moments: items,
                   // Этот bool пройдет дальше в MapboxMapPanel.
                   isLocationEnabled: isLocationEnabled,
                   locationFocusRequestId: _locationFocusRequestId,
                   mapBuilder: mapBuilder,
-                  onMomentSelected: _showMomentPreview,
                   onCameraCenterChanged: _updateCenter,
                 );
               },
@@ -214,53 +225,85 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       },
     );
   }
+
+  void _selectMomentForPanel(Moment moment) {
+    setState(() {
+      _selectedMoment = moment;
+    });
+  }
+
+  void _clearSelectedMoment() {
+    setState(() {
+      _selectedMoment = null;
+    });
+  }
 }
 
 class _MapContent extends StatelessWidget {
   const _MapContent({
     required this.moments,
+    required this.selectedMoment,
     required this.isLocationEnabled,
     required this.locationFocusRequestId,
     required this.mapBuilder,
-    required this.onMomentSelected,
+    required this.onMomentSelectedForPanel,
+    required this.onCompactMomentSelected,
+    required this.onCloseSelectedMoment,
     required this.onCameraCenterChanged,
   });
 
   final List<Moment> moments;
+  final Moment? selectedMoment;
   final bool isLocationEnabled;
   final int locationFocusRequestId;
   final MapSurfaceBuilder mapBuilder;
-  final ValueChanged<Moment> onMomentSelected;
+  final ValueChanged<Moment> onMomentSelectedForPanel;
+  final ValueChanged<Moment> onCompactMomentSelected;
+  final VoidCallback onCloseSelectedMoment;
   final ValueChanged<MapCameraCenter> onCameraCenterChanged;
 
   @override
   Widget build(BuildContext context) {
-    final map = mapBuilder(
-      moments: moments,
-      isLocationEnabled: isLocationEnabled,
-      locationFocusRequestId: locationFocusRequestId,
-      onMomentSelected: onMomentSelected,
-      onCameraCenterChanged: onCameraCenterChanged,
-    );
-
-    final sidePanel = _NearbyMomentsPanel(
-      moments: moments,
-      onMomentSelected: onMomentSelected,
-    );
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final isTablet = AppBreakpoints.isTabletWidth(constraints.maxWidth);
+            final size = Size(constraints.maxWidth, constraints.maxHeight);
+            final useSidePanel = AppBreakpoints.useSidePanel(size);
+            final sidePanelWidth = AppBreakpoints.sidePanelWidth(size);
 
-            if (isTablet) {
+            final momentTapHandler = useSidePanel
+                ? onMomentSelectedForPanel
+                : onCompactMomentSelected;
+
+            final map = Semantics(
+              container: true,
+              explicitChildNodes: true,
+              label: context.l10n.mapSemanticLabel,
+              child: mapBuilder(
+                moments: moments,
+                isLocationEnabled: isLocationEnabled,
+                locationFocusRequestId: locationFocusRequestId,
+                onMomentSelected: momentTapHandler,
+                onCameraCenterChanged: onCameraCenterChanged,
+              ),
+            );
+
+            if (useSidePanel) {
               return Row(
                 children: [
                   Expanded(child: map),
                   const SizedBox(width: AppSpacing.lg),
-                  SizedBox(width: 360, child: sidePanel),
+                  SizedBox(
+                    width: sidePanelWidth,
+                    child: _MapSidePanel(
+                      moments: moments,
+                      selectedMoment: selectedMoment,
+                      onMomentSelected: onMomentSelectedForPanel,
+                      onCloseSelectedMoment: onCloseSelectedMoment,
+                    ),
+                  ),
                 ],
               );
             }
@@ -269,7 +312,13 @@ class _MapContent extends StatelessWidget {
               children: [
                 Expanded(child: map),
                 const SizedBox(height: AppSpacing.md),
-                SizedBox(height: 220, child: sidePanel),
+                SizedBox(
+                  height: 220,
+                  child: _NearbyMomentsPanel(
+                    moments: moments,
+                    onMomentSelected: onCompactMomentSelected,
+                  ),
+                ),
               ],
             );
           },
@@ -315,6 +364,36 @@ class _NearbyMomentsPanel extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _MapSidePanel extends StatelessWidget {
+  const _MapSidePanel({
+    required this.moments,
+    required this.selectedMoment,
+    required this.onMomentSelected,
+    required this.onCloseSelectedMoment,
+  });
+
+  final List<Moment> moments;
+  final Moment? selectedMoment;
+  final ValueChanged<Moment> onMomentSelected;
+  final VoidCallback onCloseSelectedMoment;
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = selectedMoment;
+    if (selected != null) {
+      return MomentDetailsPane(
+        momentId: selected.id,
+        onClose: onCloseSelectedMoment,
+      );
+    }
+
+    return _NearbyMomentsPanel(
+      moments: moments,
+      onMomentSelected: onMomentSelected,
     );
   }
 }

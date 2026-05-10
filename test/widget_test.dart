@@ -22,6 +22,7 @@ import 'package:geo_moments/src/features/notifications/domain/entities/push_perm
 import 'package:geo_moments/src/features/notifications/domain/entities/push_token_registration.dart';
 import 'package:geo_moments/src/features/notifications/domain/repositories/push_tokens_repository.dart';
 import 'package:geo_moments/src/features/notifications/presentation/controllers/push_notifications_controller.dart';
+import 'package:geo_moments/src/generated/l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
@@ -175,6 +176,8 @@ void main() {
   });
 
   testWidgets('opens moment details from list preview', (tester) async {
+    await setTestSurfaceSize(tester, const Size(390, 844));
+
     await tester.pumpWidget(buildTestApp());
     await tester.pumpAndSettle();
 
@@ -262,6 +265,56 @@ void main() {
 
     expect(find.text('Add a short description.'), findsOneWidget);
     expect(find.text('Add media and a description first.'), findsOneWidget);
+  });
+
+  testWidgets('shows side detail panel on tablet width', (tester) async {
+    await setTestSurfaceSize(tester, const Size(1180, 820));
+
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    expect(find.text('Nearby moments'), findsOneWidget);
+
+    await tester.tap(find.text(testMoments.single.text));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Selected moment'), findsOneWidget);
+    expect(find.text('Moment details'), findsNothing);
+  });
+
+  testWidgets('keeps compact preview sheet on phone width', (tester) async {
+    await setTestSurfaceSize(tester, const Size(390, 844));
+
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(testMoments.single.text));
+    await tester.pumpAndSettle();
+
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(find.text(l10n.viewMomentDetails), findsOneWidget);
+  });
+
+  testWidgets('map exposes semantic label', (tester) async {
+    final semantics = tester.ensureSemantics();
+
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+    await tester.pumpWidget(buildTestApp());
+    await tester.pumpAndSettle();
+
+    expect(find.bySemanticsLabel(l10n.mapSemanticLabel), findsOneWidget);
+
+    semantics.dispose();
+  });
+}
+
+Future<void> setTestSurfaceSize(WidgetTester tester, Size size) async {
+  tester.view.physicalSize = size;
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(() {
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
   });
 }
 

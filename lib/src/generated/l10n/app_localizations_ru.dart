@@ -243,4 +243,25 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get notificationsPermissionDenied =>
       'Уведомления заблокированы в настройках системы.';
+
+  @override
+  String get selectedMomentTitle => 'Выбранный момент';
+
+  @override
+  String get selectedMomentEmpty => 'Выберите момент на карте.';
+
+  @override
+  String get closeMomentPanel => 'Закрыть панель момента';
+
+  @override
+  String get mapSemanticLabel => 'Карта моментов рядом';
+
+  @override
+  String get momentMediaImageLabel => 'Медиа момента';
+
+  @override
+  String get momentMediaVideoLabel => 'Превью видео момента';
+
+  @override
+  String get momentMediaMissingLabel => 'Момент без медиа';
 }

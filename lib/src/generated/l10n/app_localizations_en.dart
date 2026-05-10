@@ -243,4 +243,25 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationsPermissionDenied =>
       'Notifications are blocked in system settings.';
+
+  @override
+  String get selectedMomentTitle => 'Selected moment';
+
+  @override
+  String get selectedMomentEmpty => 'Select a moment on the map.';
+
+  @override
+  String get closeMomentPanel => 'Close moment panel';
+
+  @override
+  String get mapSemanticLabel => 'Map of nearby moments';
+
+  @override
+  String get momentMediaImageLabel => 'Moment media';
+
+  @override
+  String get momentMediaVideoLabel => 'Moment video preview';
+
+  @override
+  String get momentMediaMissingLabel => 'Moment without media';
 }

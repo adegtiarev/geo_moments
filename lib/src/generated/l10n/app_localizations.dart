@@ -561,6 +561,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notifications are blocked in system settings.'**
   String get notificationsPermissionDenied;
+
+  /// No description provided for @selectedMomentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected moment'**
+  String get selectedMomentTitle;
+
+  /// No description provided for @selectedMomentEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a moment on the map.'**
+  String get selectedMomentEmpty;
+
+  /// No description provided for @closeMomentPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Close moment panel'**
+  String get closeMomentPanel;
+
+  /// No description provided for @mapSemanticLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of nearby moments'**
+  String get mapSemanticLabel;
+
+  /// No description provided for @momentMediaImageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Moment media'**
+  String get momentMediaImageLabel;
+
+  /// No description provided for @momentMediaVideoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Moment video preview'**
+  String get momentMediaVideoLabel;
+
+  /// No description provided for @momentMediaMissingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Moment without media'**
+  String get momentMediaMissingLabel;
 }
 
 class _AppLocalizationsDelegate

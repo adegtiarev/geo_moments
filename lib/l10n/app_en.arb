@@ -145,5 +145,12 @@
   "notificationsEnabled": "Notifications enabled",
   "notificationsDisabled": "Notifications disabled",
   "notificationsAsk": "Enable notifications",
-  "notificationsPermissionDenied": "Notifications are blocked in system settings."
+  "notificationsPermissionDenied": "Notifications are blocked in system settings.",
+  "selectedMomentTitle": "Selected moment",
+  "selectedMomentEmpty": "Select a moment on the map.",
+  "closeMomentPanel": "Close moment panel",
+  "mapSemanticLabel": "Map of nearby moments",
+  "momentMediaImageLabel": "Moment media",
+  "momentMediaVideoLabel": "Moment video preview",
+  "momentMediaMissingLabel": "Moment without media"
 }
