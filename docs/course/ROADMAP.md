@@ -348,7 +348,7 @@ Flutter темы:
 
 ### 18. Release Preparation
 
-Статус: next.
+Статус: done.
 
 Flutter темы:
 

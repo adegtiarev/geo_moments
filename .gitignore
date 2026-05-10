@@ -45,7 +45,13 @@ app.*.map.json
 /android/app/release
 
 .env
+.env.*
+!.env.example
 gen_secret.cmd
 gen_secret2.cmd
 /supabase/.temp
 geo-moments-firebase-adminsdk.json
+
+android/key.properties
+*.jks
+*.keystore

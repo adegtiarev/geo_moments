@@ -4,9 +4,9 @@
 
 ## Статус
 
-Текущая стадия: `18-release-preparation`
+Текущая стадия: `course-complete`
 
-Глава 17 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet на compact phone, wide/tablet side detail panel, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies, reliability layer для lifecycle, permissions, retry, failures и logging, Drift/SQLite read-side cache для nearby moments/details с stale-while-revalidate flow, а также выделенные test helpers и quality gate в README.
+Глава 18 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet на compact phone, wide/tablet side detail panel, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies, reliability layer для lifecycle, permissions, retry, failures и logging, Drift/SQLite read-side cache для nearby moments/details с stale-while-revalidate flow, выделенные test helpers и quality gate в README, а также release-ready Android/iOS assets, signing/checklist documentation и Android release artifacts.
 
 ## Уже сделано
 
@@ -128,19 +128,26 @@
 - `README.md` дополнен quality gate командами, Drift/SQLite cache в стеке и предупреждением не коммитить `.env`, Firebase service account JSON или service role secrets.
 - Во время проверки исправлено: test `cached details remain visible when comments are unavailable` теперь явно выставляет compact phone viewport перед ожиданием bottom sheet; удалены duplicate imports в cache tests; semantics test теперь закрывает `SemanticsHandle` внутри body теста.
 - Проверено после главы 17 2026-05-10: `dart run build_runner build`, `flutter gen-l10n`, `dart format lib test docs/course`, `flutter analyze`, `flutter test` прошли.
+- Реализована глава 18: добавлены `flutter_launcher_icons` и `flutter_native_splash`, source assets `assets/branding/app_icon.png` и `assets/branding/splash_icon.png`, generated Android/iOS launcher icons и splash assets.
+- Android app label изменен на `Geo Moments`; Supabase OAuth deep link `io.supabase.geomoments://login-callback/` сохранен.
+- Android release signing переведен на `android/key.properties` с fallback на debug signing только для учебной/CI сборки без локальных secrets; template `android/key.properties.example` добавлен без реальных secrets.
+- `.gitignore` теперь игнорирует `.env`, `.env.*`, `android/key.properties`, `*.jks`, `*.keystore`, но сохраняет `.env.example`.
+- Добавлены release checklists `docs/release/android-release-checklist.md` и `docs/release/ios-release-checklist.md`; README дополнен features, architecture, development checks и release links.
+- Во время проверки исправлено: `.env.production` и другие `.env.*` теперь защищены от случайного commit; из Gradle удалены template TODO comments; Android checklist явно предупреждает не публиковать artifacts, подписанные debug fallback.
+- Проверено после главы 18 2026-05-10: `dart run build_runner build`, `flutter gen-l10n`, `dart format lib test docs/course`, `flutter analyze`, `flutter test`, `flutter build appbundle --release`, `flutter build apk --release --split-per-abi` прошли.
+- Android release artifacts собраны локально: `build/app/outputs/bundle/release/app-release.aab`, `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`, `app-armeabi-v7a-release.apk`, `app-x86_64-release.apk`.
 
 ## Следующая глава
 
-Текущая глава: 18 Release Preparation
+Текущая глава: курс завершен
 
-Цель главы: подготовить release-ready MVP:
+Следующий возможный этап вне курса:
 
-- app icon и splash;
-- Android signing/release build;
-- iOS bundle id/capabilities/release checklist;
-- build flavors/env handling;
-- финальный GitHub README как portfolio project;
-- сохранить текущий quality gate, route order, offline cache, compact/wide layout, notification routing и отсутствие secrets в Git.
+- ручной release smoke test на реальном Android device;
+- TestFlight/iOS проверка на macOS;
+- настройка production Firebase/Supabase проектов и OAuth fingerprints;
+- публикация portfolio README/screenshots;
+- отдельный future PR для flavors, если нужны dev/prod apps на одном устройстве.
 
 ## Правило продолжения в новом чате
 
@@ -182,6 +189,8 @@ pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, i
 supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments, moment_likes, moment_comments, push_tokens
 supabase/functions         send-comment-push Edge Function для FCM HTTP v1 push по comments/replies
 docs/course/...            документация курса
+docs/release/...           Android/iOS release checklists
+assets/branding/...        source PNG для launcher icon и splash
 ```
 
 ## Команды проверки

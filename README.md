@@ -46,3 +46,27 @@ Use `flutter run` for manual checks involving Mapbox, camera/media capture, OAut
 ## Required environment
 
 Copy `.env.example` to `.env` and fill in the local Supabase and Mapbox values. Do not commit `.env`, Firebase service account JSON files, or Supabase service role secrets.
+
+## Features
+
+- Map-first moment discovery with Mapbox.
+- Photo/video moment creation with Supabase Storage.
+- Likes, comments, replies, and realtime discussion refresh.
+- Firebase push notifications for comments and replies.
+- Offline read cache for nearby moments and details with Drift.
+- Compact phone preview sheet and tablet/wide side detail panel.
+- English, Russian, and Spanish localization.
+
+## Architecture
+
+- Riverpod for state and dependency injection.
+- Feature-first Flutter structure.
+- Repository boundaries for Supabase/Firebase integrations.
+- Drift read-side cache for offline startup and stale-while-revalidate.
+- Widget/provider tests with fake repositories and in-memory database.
+
+## Release
+
+Android release checklist: [docs/release/android-release-checklist.md](docs/release/android-release-checklist.md)
+
+iOS release checklist: [docs/release/ios-release-checklist.md](docs/release/ios-release-checklist.md)
