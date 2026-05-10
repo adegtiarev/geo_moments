@@ -86,9 +86,9 @@ Deno.serve(async (req) => {
     const title = comment.parent_id === null ? "New comment" : "New reply";
     const body = trimNotificationBody(comment.body);
 
-    const results = await Promise.allSettled(
+    const results = await Promise.all(
       tokens.map(({ token }) =>
-        sendFcmMessage({
+        sendFcmMessageToToken({
           accessToken,
           token,
           title,
@@ -104,14 +104,34 @@ Deno.serve(async (req) => {
       ),
     );
 
-    const failed = results.filter((result) => result.status === "rejected");
+    const failed = results.filter((result) => !result.ok);
+    const invalidTokens = failed
+      .filter((result) => result.invalidToken)
+      .map((result) => result.token);
+
+    if (invalidTokens.length > 0) {
+      const { error: deleteError } = await supabase
+        .from("push_tokens")
+        .delete()
+        .in("token", invalidTokens);
+
+      if (deleteError) {
+        console.error("send-comment-push token cleanup failed", deleteError);
+      }
+    }
+
     for (const failure of failed) {
-      console.error("send-comment-push FCM failure", failure.reason);
+      console.error("send-comment-push FCM failure", {
+        tokenPrefix: failure.token.substring(0, 12),
+        status: failure.status,
+        body: failure.errorBody,
+      });
     }
 
     return Response.json({
-      sent: results.filter((result) => result.status === "fulfilled").length,
+      sent: results.filter((result) => result.ok).length,
       failed: failed.length,
+      removed_invalid_tokens: invalidTokens.length,
     });
   } catch (error) {
     console.error("send-comment-push failed", error);
@@ -219,7 +239,7 @@ async function importPrivateKey(pem: string): Promise<CryptoKey> {
   );
 }
 
-async function sendFcmMessage({
+async function sendFcmMessageToToken({
   accessToken,
   token,
   title,
@@ -231,7 +251,13 @@ async function sendFcmMessage({
   title: string;
   body: string;
   data: Record<string, string>;
-}) {
+}): Promise<{
+  ok: boolean;
+  token: string;
+  status?: number;
+  errorBody?: string;
+  invalidToken?: boolean;
+}> {
   const firebaseServiceAccount = getFirebaseServiceAccount();
   const response = await fetch(
     `https://fcm.googleapis.com/v1/projects/${firebaseServiceAccount.project_id}/messages:send`,
@@ -255,8 +281,17 @@ async function sendFcmMessage({
   );
 
   if (!response.ok) {
-    throw new Error(await response.text());
+    const errorBody = await response.text();
+    return {
+      ok: false,
+      token,
+      status: response.status,
+      errorBody,
+      invalidToken: isInvalidFcmTokenError(response.status, errorBody),
+    };
   }
+
+  return { ok: true, token };
 }
 
 function getFirebaseServiceAccount(): FirebaseServiceAccount {
@@ -276,4 +311,11 @@ function getFirebaseServiceAccount(): FirebaseServiceAccount {
   throw new Error(
     "Missing FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 or FIREBASE_SERVICE_ACCOUNT_JSON secret.",
   );
+}
+
+function isInvalidFcmTokenError(status: number, body: string): boolean {
+  return status === 404 ||
+    body.includes("UNREGISTERED") ||
+    body.includes("registration-token-not-registered") ||
+    body.includes("Requested entity was not found");
 }
