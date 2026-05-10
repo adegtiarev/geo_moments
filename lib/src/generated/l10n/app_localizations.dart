@@ -160,6 +160,30 @@ abstract class AppLocalizations {
   /// **'Location permission is denied.'**
   String get locationPermissionDenied;
 
+  /// No description provided for @locationPermissionBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is blocked in system settings.'**
+  String get locationPermissionBlocked;
+
+  /// No description provided for @locationPermissionRationale.
+  ///
+  /// In en, this message translates to:
+  /// **'Location helps center the map on where you are.'**
+  String get locationPermissionRationale;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// No description provided for @allowPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get allowPermission;
+
   /// Settings row title for theme selection
   ///
   /// In en, this message translates to:
@@ -279,6 +303,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @momentsLoadRetryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moments did not load'**
+  String get momentsLoadRetryTitle;
+
+  /// No description provided for @momentDetailsLoadRetryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moment did not load'**
+  String get momentDetailsLoadRetryTitle;
+
+  /// No description provided for @commentsLoadRetryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Comments did not load'**
+  String get commentsLoadRetryTitle;
+
+  /// No description provided for @networkOfflineMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You appear to be offline.'**
+  String get networkOfflineMessage;
+
+  /// No description provided for @networkTimeoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The network is taking too long.'**
+  String get networkTimeoutMessage;
+
+  /// No description provided for @genericFailureMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong.'**
+  String get genericFailureMessage;
 
   /// No description provided for @createMomentTooltip.
   ///

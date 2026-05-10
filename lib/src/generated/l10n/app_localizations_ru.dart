@@ -39,6 +39,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get locationPermissionDenied => 'Доступ к геолокации запрещен.';
 
   @override
+  String get locationPermissionBlocked =>
+      'Геолокация заблокирована в системных настройках.';
+
+  @override
+  String get locationPermissionRationale =>
+      'Геолокация помогает центрировать карту на вас.';
+
+  @override
+  String get openSettings => 'Открыть настройки';
+
+  @override
+  String get allowPermission => 'Разрешить';
+
+  @override
   String get themeSettingTitle => 'Тема';
 
   @override
@@ -99,6 +113,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get retry => 'Повторить';
+
+  @override
+  String get momentsLoadRetryTitle => 'Моменты не загрузились';
+
+  @override
+  String get momentDetailsLoadRetryTitle => 'Момент не загрузился';
+
+  @override
+  String get commentsLoadRetryTitle => 'Комментарии не загрузились';
+
+  @override
+  String get networkOfflineMessage => 'Похоже, вы не в сети.';
+
+  @override
+  String get networkTimeoutMessage => 'Сеть отвечает слишком долго.';
+
+  @override
+  String get genericFailureMessage => 'Что-то пошло не так.';
 
   @override
   String get createMomentTooltip => 'Создать момент';

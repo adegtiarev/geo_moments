@@ -39,6 +39,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationPermissionDenied => 'Location permission is denied.';
 
   @override
+  String get locationPermissionBlocked =>
+      'Location is blocked in system settings.';
+
+  @override
+  String get locationPermissionRationale =>
+      'Location helps center the map on where you are.';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get allowPermission => 'Allow';
+
+  @override
   String get themeSettingTitle => 'Theme';
 
   @override
@@ -99,6 +113,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get momentsLoadRetryTitle => 'Moments did not load';
+
+  @override
+  String get momentDetailsLoadRetryTitle => 'Moment did not load';
+
+  @override
+  String get commentsLoadRetryTitle => 'Comments did not load';
+
+  @override
+  String get networkOfflineMessage => 'You appear to be offline.';
+
+  @override
+  String get networkTimeoutMessage => 'The network is taking too long.';
+
+  @override
+  String get genericFailureMessage => 'Something went wrong.';
 
   @override
   String get createMomentTooltip => 'Create moment';

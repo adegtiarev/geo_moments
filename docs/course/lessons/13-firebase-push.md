@@ -1,6 +1,6 @@
 # 13 Firebase Push
 
-Статус: next.
+Статус: done.
 
 ## Что строим
 

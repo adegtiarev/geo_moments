@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realtime_client/realtime_client.dart';
 
 import '../../../../core/backend/supabase_client_provider.dart';
+import '../../../../core/network/retry_policy.dart';
 import '../../domain/entities/create_comment_command.dart';
 import '../../domain/entities/moment_comment.dart';
 import 'moments_providers.dart';
@@ -46,6 +47,10 @@ class MomentCommentsController extends AsyncNotifier<List<MomentComment>> {
     state = await AsyncValue.guard(_fetch);
   }
 
+  void retry() {
+    ref.invalidateSelf();
+  }
+
   Future<void> _create({required String body, String? parentId}) async {
     final trimmed = body.trim();
     if (trimmed.isEmpty) {
@@ -83,9 +88,12 @@ class MomentCommentsController extends AsyncNotifier<List<MomentComment>> {
   }
 
   Future<List<MomentComment>> _fetch() {
-    return ref
-        .read(momentCommentsRepositoryProvider)
-        .fetchCommentsPage(momentId: _momentId);
+    final retryPolicy = ref.read(retryPolicyProvider);
+    return retryPolicy.run(
+      () => ref
+          .read(momentCommentsRepositoryProvider)
+          .fetchCommentsPage(momentId: _momentId),
+    );
   }
 
   void _subscribeToRealtime() {

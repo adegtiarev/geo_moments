@@ -20,4 +20,10 @@ class LocationPermissionController extends AsyncNotifier<PermissionStatus> {
 
     return nextStatus;
   }
+
+  Future<void> refresh() async {
+    state = await AsyncValue.guard(() {
+      return Permission.locationWhenInUse.status;
+    });
+  }
 }

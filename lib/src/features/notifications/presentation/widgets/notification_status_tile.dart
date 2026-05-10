@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/localization/app_localizations_context.dart';
+import '../../../../core/lifecycle/app_lifecycle_providers.dart';
 import '../../domain/entities/push_permission_status.dart';
 import '../controllers/push_notifications_controller.dart';
 
@@ -11,10 +14,20 @@ class NotificationStatusTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(pushNotificationsControllerProvider);
-
+    ref.listen(appResumedProvider, (previous, next) {
+      if (next.hasValue) {
+        unawaited(
+          ref
+              .read(pushNotificationsControllerProvider.notifier)
+              .refreshPermissionStatus(),
+        );
+      }
+    });
     return state.when(
-      loading: () =>
-          const ListTile(leading: CircularProgressIndicator(), title: Text('')),
+      loading: () => ListTile(
+        leading: const CircularProgressIndicator(),
+        title: Text(context.l10n.notificationsTitle),
+      ),
       error: (_, _) => ListTile(
         leading: const Icon(Icons.notifications_off_outlined),
         title: Text(context.l10n.notificationsTitle),

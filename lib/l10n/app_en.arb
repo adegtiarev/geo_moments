@@ -40,6 +40,10 @@
   "@locationPermissionDenied": {
     "description": "Message shown when location permission is denied"
   },
+  "locationPermissionBlocked": "Location is blocked in system settings.",
+  "locationPermissionRationale": "Location helps center the map on where you are.",
+  "openSettings": "Open settings",
+  "allowPermission": "Allow",
   "themeSettingTitle": "Theme",
   "@themeSettingTitle": {
     "description": "Settings row title for theme selection"
@@ -99,6 +103,12 @@
   "momentDetailsTitle": "Moment details",
   "momentDetailsLoadError": "Could not load this moment.",
   "retry": "Retry",
+  "momentsLoadRetryTitle": "Moments did not load",
+  "momentDetailsLoadRetryTitle": "Moment did not load",
+  "commentsLoadRetryTitle": "Comments did not load",
+  "networkOfflineMessage": "You appear to be offline.",
+  "networkTimeoutMessage": "The network is taking too long.",
+  "genericFailureMessage": "Something went wrong.",
   "createMomentTooltip": "Create moment",
   "createMomentTitle": "Create moment",
   "saveDraft": "Save draft",

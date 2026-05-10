@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geo_moments/src/features/moments/presentation/widgets/retry_error_view.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../app/localization/app_localizations_context.dart';
+import '../../../../core/network/app_failure.dart';
+import '../../../../core/network/app_failure_message.dart';
 import '../../../../core/ui/app_spacing.dart';
 import '../../domain/entities/moment.dart';
 import '../../domain/entities/moment_comment.dart';
@@ -80,13 +83,18 @@ class _MomentDetailsContentState extends ConsumerState<MomentDetailsContent> {
             padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
             child: Center(child: CircularProgressIndicator()),
           ),
-          error: (_, _) => OutlinedButton.icon(
-            onPressed: () {
-              ref.invalidate(momentCommentsControllerProvider(moment.id));
-            },
-            icon: const Icon(Icons.refresh_outlined),
-            label: Text(context.l10n.retry),
-          ),
+          error: (error, stackTrace) {
+            final failure = mapExceptionToFailure(error);
+            return RetryErrorView(
+              title: context.l10n.commentsLoadRetryTitle,
+              message: messageForFailure(context, failure),
+              onRetry: () {
+                ref
+                    .read(momentCommentsControllerProvider(moment.id).notifier)
+                    .retry();
+              },
+            );
+          },
           data: (items) => MomentCommentList(
             comments: items,
             onReply: (comment) {

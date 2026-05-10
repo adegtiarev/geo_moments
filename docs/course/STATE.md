@@ -1,12 +1,12 @@
 # Course State
 
-Последнее обновление: 2026-05-09
+Последнее обновление: 2026-05-10
 
 ## Статус
 
-Текущая стадия: `13-firebase-push`
+Текущая стадия: `15-tablet-landscape-ui-polish`
 
-Глава 12 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments и comments/replies flow с Supabase Realtime.
+Глава 14 завершена пользователем и проверена в этом чате. Проект имеет базовый Flutter-каркас с Riverpod, `MaterialApp.router`, `go_router`, light/dark theme, ручным переключателем темы, design tokens, локализацию EN/RU/ES, Supabase bootstrap/config foundation, auth flow через Supabase OAuth, SQL migrations для `profiles`/`moments`, RLS policies, `moment-media` bucket и storage policies, seed data, Flutter domain/data/presentation layer для чтения moments из Supabase, настоящий Mapbox map screen с markers, responsive layout, location permission, marker/list preview bottom sheet, details route `/moments/:momentId`, create route `/moments/new` с настоящим upload/save flow, likes flow для moments, comments/replies flow с Supabase Realtime, Firebase/FCM push notifications для новых comments/replies и reliability layer для lifecycle, permissions, retry, failures и logging.
 
 ## Уже сделано
 
@@ -84,21 +84,37 @@
 - Перед главой 13 исправлен fallback автора в comments UI: если `authorDisplayName` отсутствует, raw UUID автора не показывается.
 - Пользователь сообщил, что Supabase migration применена, RLS включен, replies связаны через `parent_id`, realtime publication проверена через `pg_publication_tables`, details/likes/comments/replies работают вручную.
 - Проверки после главы 12 в этом чате прошли 2026-05-09: `flutter analyze`, `flutter test`.
+- Реализована глава 13: добавлены Firebase config files `firebase.json`, `android/app/google-services.json`, `lib/firebase_options.dart`, зависимости `firebase_core`/`firebase_messaging`, Firebase initialization и top-level background handler в bootstrap.
+- Добавлена migration `202605100001_create_push_tokens.sql`: таблица `push_tokens`, RLS policies, `upsert_push_token` через `auth.uid()` и unique token для multi-device token storage.
+- Добавлена feature `lib/src/features/notifications`: `PushMessagingClient`, `FirebasePushMessagingClient`, `PushTokensRepository`, `SupabasePushTokensRepository`, `PushNotificationsController`, `NotificationStatusTile`.
+- Settings стал показывать notification status/action; permission dialog вызывается по действию пользователя, а token registration происходит только для signed-in user при authorized/provisional status.
+- `GeoMomentsApp` слушает `FirebaseMessaging.onMessageOpenedApp`, проверяет `getInitialMessage()` и открывает `/moments/:momentId` по data payload `moment_id`; pending notification moment открывается после auth state.
+- Добавлена Edge Function `supabase/functions/send-comment-push/index.ts`, вызываемая Database Webhook на `moment_comments insert`; function проверяет `x-webhook-secret`, находит recipient для root comment/reply, не отправляет push автору собственного действия, отправляет FCM HTTP v1 message и чистит invalid FCM tokens.
+- Firebase service account JSON не закоммичен; Supabase использует secret `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64`, `COMMENT_PUSH_WEBHOOK_SECRET` сохранен в Supabase secrets, function задеплоена с `--no-verify-jwt` и собственной проверкой webhook secret.
+- Пользователь проверил вручную push на реальном устройстве и эмуляторе под разными аккаунтами; последний проверочный ответ Edge Function был `{"sent":1,"failed":1,"removed_invalid_tokens":1}`, после cleanup ожидается `failed:0`.
+- Проверено 2026-05-10: `flutter gen-l10n`, `flutter analyze`, `flutter test`. Перед обновлением course docs `git status --short` был чистым. Поиск по репозиторию не нашел закоммиченный Firebase service account/private key, кроме безопасных упоминаний в Edge Function и уроке.
+- Реализована глава 14: добавлены `AppLifecycleService`, `appLifecycleServiceProvider`, `appResumedProvider`, refresh location permission на resume и refresh push permission без повторного permission dialog.
+- Добавлены локализованные EN/RU/ES строки для permission banner, retry titles и offline/timeout/generic failure messages; hardcoded UI strings из widgets убраны.
+- Добавлены `LocationPermissionBanner`, `RetryErrorView`, `AppFailure`, `messageForFailure`, `RetryPolicy`, `AppLogger`, `DebugAppLogger`, `appLoggerProvider`.
+- `MapScreen` показывает location permission banner, открывает system settings для permanently denied/restricted, сохраняет focus command для location button и показывает retry UI при первом failure загрузки nearby moments.
+- `MomentDetailsScreen` и comments section в `MomentDetailsContent` показывают localized retry UI; `MomentCommentsController.retry()` инвалидирует текущий family provider без ручного параллельного state.
+- `nearbyMomentsProvider`, `momentDetailsProvider` и comments fetch используют `RetryPolicy` timeout.
+- Push/create logging переведен с прямого `debugPrint` на `AppLogger`; FCM token логируется только коротким prefix.
+- Добавлен `test/app_lifecycle_test.dart` с реальным `main()` и fake lifecycle service через provider override.
+- Проверено после главы 14 2026-05-10: `flutter gen-l10n`, `dart format lib test`, `flutter analyze`, `flutter test`.
 
 ## Следующая глава
 
-Текущая глава: [13 Firebase Push](lessons/13-firebase-push.md)
+Текущая глава: 15 Tablet, Landscape, and UI Polish
 
-Цель главы: добавить push notifications foundation:
+Цель главы: улучшить adaptive UI и визуальную полировку:
 
-- подключить Firebase/FCM через FlutterFire CLI;
-- добавить permission flow для push notifications;
-- получить и сохранить FCM token в Supabase;
-- хранить push tokens с RLS так, чтобы пользователь видел только свои tokens;
-- добавить Supabase Edge Function для отправки push по новому comment/reply;
-- открыть `/moments/:momentId` из notification tap;
-- сохранить тестируемую архитектуру через repository/controller/provider слой;
-- проверить `supabase db push`, `supabase functions deploy`, `flutter gen-l10n`, `flutter analyze`, `flutter test`, ручной сценарий test notification/comment push.
+- tablet layout: карта + detail panel;
+- landscape layout без наложений;
+- проверка текстов EN/RU/ES;
+- media aspect ratios;
+- accessibility basics;
+- сохранить scrollable details/settings tests, route order `/moments/new` перед `/moments/:momentId`, notification tap flow и reliability behavior главы 14.
 
 ## Правило продолжения в новом чате
 
@@ -125,14 +141,18 @@ lib/src/app/bootstrap      Supabase initialization
 lib/src/generated/l10n     generated AppLocalizations
 lib/l10n                   ARB-файлы EN/RU/ES
 lib/src/core/backend       supabaseClientProvider
+lib/src/core/lifecycle     app lifecycle service/providers
+lib/src/core/logging       AppLogger, DebugAppLogger, appLoggerProvider
+lib/src/core/network       AppFailure, localized failure messages, RetryPolicy
 lib/src/core/ui/...        AppSpacing, AppRadius, AppBreakpoints
 lib/src/features/auth      AuthScreen, AuthRepository, AppUser, auth providers
 lib/src/features/map/...   Mapbox MapScreen, MapboxMapPanel, location permission, marker/list preview bottom sheet
 lib/src/features/moments   Moment entity, DTO, repository, providers, NearbyMomentsList, MomentPreviewCard, MomentDetailsScreen/details widgets, create draft/media picker flow, upload/save flow, likes flow, comments/replies flow
-lib/src/features/notifications   планируется в главе 13: FCM token registration, permission controller, notification tap routing
+lib/src/features/notifications   FCM token registration, permission controller, notification tap routing, Settings notification tile
 lib/src/features/settings  SettingsScreen с ThemeModeSelector и LocaleSelector
-pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker подключены
-supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments
+pubspec.yaml               flutter_riverpod, go_router, flutter_localizations, intl, supabase_flutter, flutter_dotenv, mapbox_maps_flutter, permission_handler, image_picker, firebase_core, firebase_messaging подключены
+supabase/migrations        profiles/moments schema, RLS, nearby_moments RPC, seed moments, moment_likes, moment_comments, push_tokens
+supabase/functions         send-comment-push Edge Function для FCM HTTP v1 push по comments/replies
 docs/course/...            документация курса
 ```
 

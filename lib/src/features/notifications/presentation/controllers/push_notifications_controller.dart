@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/backend/supabase_client_provider.dart';
+import '../../../../core/logging/app_logger_provider.dart';
 import '../../../auth/presentation/controllers/auth_providers.dart';
 import '../../data/repositories/supabase_push_tokens_repository.dart';
 import '../../data/services/firebase_push_messaging_client.dart';
@@ -40,7 +40,9 @@ class PushNotificationsController extends AsyncNotifier<PushPermissionStatus> {
 
     final client = ref.read(pushMessagingClientProvider);
     final status = await client.getPermissionStatus();
-    debugPrint('Push permission on build: $status');
+    ref
+        .read(appLoggerProvider)
+        .info('Push permission loaded', context: {'status': status.name});
 
     if (_canUseToken(status) && ref.read(currentUserProvider).value != null) {
       await _registerCurrentToken(client);
@@ -50,10 +52,27 @@ class PushNotificationsController extends AsyncNotifier<PushPermissionStatus> {
     return status;
   }
 
+  Future<void> refreshPermissionStatus() async {
+    final client = ref.read(pushMessagingClientProvider);
+    final status = await client.getPermissionStatus();
+
+    if (_canUseToken(status) && ref.read(currentUserProvider).value != null) {
+      await _registerCurrentToken(client);
+      _listenForTokenRefresh(client);
+    }
+
+    state = AsyncData(status);
+  }
+
   Future<void> requestAndRegister() async {
     final user = ref.read(currentUserProvider).value;
     if (user == null) {
-      debugPrint('Push registration skipped: no signed-in user.');
+      ref
+          .read(appLoggerProvider)
+          .info(
+            'Push registration skipped',
+            context: {'reason': 'no-signed-in-user'},
+          );
       return;
     }
 
@@ -61,7 +80,9 @@ class PushNotificationsController extends AsyncNotifier<PushPermissionStatus> {
     state = await AsyncValue.guard(() async {
       final client = ref.read(pushMessagingClientProvider);
       final status = await client.requestPermission();
-      debugPrint('Push permission after request: $status');
+      ref
+          .read(appLoggerProvider)
+          .info('Push permission requested', context: {'status': status.name});
 
       if (_canUseToken(status)) {
         await _registerCurrentToken(client);
@@ -75,13 +96,20 @@ class PushNotificationsController extends AsyncNotifier<PushPermissionStatus> {
   Future<void> registerIfAllowed() async {
     final user = ref.read(currentUserProvider).value;
     if (user == null) {
-      debugPrint('Push registration skipped: no signed-in user.');
+      ref
+          .read(appLoggerProvider)
+          .info(
+            'Push registration skipped',
+            context: {'reason': 'no-signed-in-user'},
+          );
       return;
     }
 
     final client = ref.read(pushMessagingClientProvider);
     final status = await client.getPermissionStatus();
-    debugPrint('Push permission on startup: $status');
+    ref
+        .read(appLoggerProvider)
+        .info('Push permission refreshed', context: {'status': status.name});
 
     if (_canUseToken(status)) {
       await _registerCurrentToken(client);
@@ -117,16 +145,22 @@ class PushNotificationsController extends AsyncNotifier<PushPermissionStatus> {
   Future<void> _registerCurrentTokenNow(PushMessagingClient client) async {
     final token = await client.getToken();
     if (token == null || token.isEmpty) {
-      debugPrint(
-        'Push token registration skipped: Firebase returned no token.',
-      );
+      ref
+          .read(appLoggerProvider)
+          .warning(
+            'Push token registration skipped',
+            context: {'reason': 'firebase-returned-no-token'},
+          );
       return;
     }
 
     if (_lastRegisteredToken == token) {
-      debugPrint(
-        'Push token already registered for $_platform: ${_shortToken(token)}',
-      );
+      ref
+          .read(appLoggerProvider)
+          .info(
+            'Push token already registered',
+            context: {'platform': _platform, 'tokenPrefix': _shortToken(token)},
+          );
       return;
     }
 
@@ -134,12 +168,22 @@ class PushNotificationsController extends AsyncNotifier<PushPermissionStatus> {
         .read(pushTokensRepositoryProvider)
         .upsertToken(PushTokenRegistration(token: token, platform: _platform));
     _lastRegisteredToken = token;
-    debugPrint('Push token registered for $_platform: ${_shortToken(token)}');
+    ref
+        .read(appLoggerProvider)
+        .info(
+          'Push token registered',
+          context: {'platform': _platform, 'tokenPrefix': _shortToken(token)},
+        );
   }
 
   void _listenForTokenRefresh(PushMessagingClient client) {
     _tokenRefreshSubscription ??= client.onTokenRefresh.listen((token) {
-      debugPrint('Push token refreshed: ${_shortToken(token)}');
+      ref
+          .read(appLoggerProvider)
+          .info(
+            'Push token refreshed',
+            context: {'tokenPrefix': _shortToken(token)},
+          );
       unawaited(
         ref
             .read(pushTokensRepositoryProvider)

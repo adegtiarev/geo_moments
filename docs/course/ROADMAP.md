@@ -254,7 +254,7 @@ Flutter/Supabase темы:
 
 ### 13. Firebase Push
 
-Статус: next.
+Статус: done.
 
 Flutter/Firebase темы:
 
@@ -273,6 +273,8 @@ Flutter/Firebase темы:
 
 ### 14. App Lifecycle, Permissions, and Reliability
 
+Статус: done.
+
 Flutter темы:
 
 - app lifecycle;
@@ -290,6 +292,8 @@ Flutter темы:
 ## Phase 6: Portfolio polish
 
 ### 15. Tablet, Landscape, and UI Polish
+
+Статус: next.
 
 Flutter темы:
 

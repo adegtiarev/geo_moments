@@ -5,14 +5,19 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../app/localization/app_localizations_context.dart';
 import '../../../../app/router/app_router.dart';
+import '../../../../core/lifecycle/app_lifecycle_providers.dart';
+import '../../../../core/network/app_failure.dart';
+import '../../../../core/network/app_failure_message.dart';
 import '../../../../core/ui/app_breakpoints.dart';
 import '../../../../core/ui/app_radius.dart';
 import '../../../../core/ui/app_spacing.dart';
 import '../../../moments/domain/entities/moment.dart';
 import '../../../moments/presentation/controllers/moments_providers.dart';
 import '../../../moments/presentation/widgets/nearby_moments_list.dart';
+import '../../../moments/presentation/widgets/retry_error_view.dart';
 import '../../domain/entities/map_camera_center.dart';
 import '../controllers/location_permission_controller.dart';
+import '../widgets/location_permission_banner.dart';
 import '../widgets/map_surface_builder.dart';
 import '../widgets/moment_preview_sheet.dart';
 
@@ -39,11 +44,18 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
     // 3. Permission provider говорит, можно ли включить location puck.
     final permission = ref.watch(locationPermissionControllerProvider);
+    final permissionStatus = permission.value;
     final isLocationEnabled = permission.when(
-      data: (status) => status.isGranted,
+      data: _canUseLocation,
       error: (_, _) => false,
       loading: () => false,
     );
+
+    ref.listen(appResumedProvider, (previous, next) {
+      if (next.hasValue) {
+        ref.read(locationPermissionControllerProvider.notifier).refresh();
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -73,62 +85,104 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           ),
         ],
       ),
-      body: moments.when(
-        loading: () {
-          if (!_hasLoadedMoments) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          if (permissionStatus != null)
+            LocationPermissionBanner(
+              status: permissionStatus,
+              onRequest: _focusUserLocation,
+              onOpenSettings: _openSystemSettings,
+            ),
+          Expanded(
+            child: moments.when(
+              loading: () {
+                if (!_hasLoadedMoments) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          return _MapContent(
-            moments: _visibleMoments,
-            isLocationEnabled: isLocationEnabled,
-            locationFocusRequestId: _locationFocusRequestId,
-            mapBuilder: mapBuilder,
-            onMomentSelected: _showMomentPreview,
-            onCameraCenterChanged: _updateCenter,
-          );
-        },
-        error: (error, _) {
-          if (_hasLoadedMoments) {
-            return _MapContent(
-              moments: _visibleMoments,
-              isLocationEnabled: isLocationEnabled,
-              locationFocusRequestId: _locationFocusRequestId,
-              mapBuilder: mapBuilder,
-              onMomentSelected: _showMomentPreview,
-              onCameraCenterChanged: _updateCenter,
-            );
-          }
+                return _MapContent(
+                  moments: _visibleMoments,
+                  isLocationEnabled: isLocationEnabled,
+                  locationFocusRequestId: _locationFocusRequestId,
+                  mapBuilder: mapBuilder,
+                  onMomentSelected: _showMomentPreview,
+                  onCameraCenterChanged: _updateCenter,
+                );
+              },
+              error: (error, stackTrace) {
+                if (_hasLoadedMoments) {
+                  return _MapContent(
+                    moments: _visibleMoments,
+                    isLocationEnabled: isLocationEnabled,
+                    locationFocusRequestId: _locationFocusRequestId,
+                    mapBuilder: mapBuilder,
+                    onMomentSelected: _showMomentPreview,
+                    onCameraCenterChanged: _updateCenter,
+                  );
+                }
 
-          return Center(child: Text(context.l10n.nearbyMomentsLoadError));
-        },
-        data: (items) {
-          _visibleMoments = items;
-          _hasLoadedMoments = true;
+                final failure = mapExceptionToFailure(error);
+                return RetryErrorView(
+                  title: context.l10n.momentsLoadRetryTitle,
+                  message: messageForFailure(context, failure),
+                  onRetry: () => ref.invalidate(nearbyMomentsProvider(_center)),
+                );
+              },
+              data: (items) {
+                _visibleMoments = items;
+                _hasLoadedMoments = true;
 
-          return _MapContent(
-            moments: items,
-            // Этот bool пройдет дальше в MapboxMapPanel.
-            isLocationEnabled: isLocationEnabled,
-            locationFocusRequestId: _locationFocusRequestId,
-            mapBuilder: mapBuilder,
-            onMomentSelected: _showMomentPreview,
-            onCameraCenterChanged: _updateCenter,
-          );
-        },
+                return _MapContent(
+                  moments: items,
+                  // Этот bool пройдет дальше в MapboxMapPanel.
+                  isLocationEnabled: isLocationEnabled,
+                  locationFocusRequestId: _locationFocusRequestId,
+                  mapBuilder: mapBuilder,
+                  onMomentSelected: _showMomentPreview,
+                  onCameraCenterChanged: _updateCenter,
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Future<void> _focusUserLocation() async {
+    final currentStatus = ref.read(locationPermissionControllerProvider).value;
+    if (currentStatus != null) {
+      if (_canUseLocation(currentStatus)) {
+        _sendLocationFocusCommand();
+        return;
+      }
+
+      if (currentStatus.isPermanentlyDenied || currentStatus.isRestricted) {
+        await _openSystemSettings();
+        return;
+      }
+    }
+
     final status = await ref
         .read(locationPermissionControllerProvider.notifier)
         .request();
 
-    if (!mounted || !status.isGranted) {
+    if (!mounted || !_canUseLocation(status)) {
       return;
     }
 
+    _sendLocationFocusCommand();
+  }
+
+  bool _canUseLocation(PermissionStatus status) {
+    return status.isGranted || status.isLimited;
+  }
+
+  Future<void> _openSystemSettings() async {
+    await openAppSettings();
+  }
+
+  void _sendLocationFocusCommand() {
     setState(() {
       _locationFocusRequestId += 1;
     });

@@ -40,6 +40,20 @@ class AppLocalizationsEs extends AppLocalizations {
       'El permiso de ubicación está denegado.';
 
   @override
+  String get locationPermissionBlocked =>
+      'La ubicación está bloqueada en los ajustes del sistema.';
+
+  @override
+  String get locationPermissionRationale =>
+      'La ubicación ayuda a centrar el mapa donde estás.';
+
+  @override
+  String get openSettings => 'Abrir ajustes';
+
+  @override
+  String get allowPermission => 'Permitir';
+
+  @override
   String get themeSettingTitle => 'Tema';
 
   @override
@@ -101,6 +115,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get retry => 'Reintentar';
+
+  @override
+  String get momentsLoadRetryTitle => 'No se cargaron los momentos';
+
+  @override
+  String get momentDetailsLoadRetryTitle => 'No se cargó el momento';
+
+  @override
+  String get commentsLoadRetryTitle => 'No se cargaron los comentarios';
+
+  @override
+  String get networkOfflineMessage => 'Parece que no tienes conexión.';
+
+  @override
+  String get networkTimeoutMessage => 'La red está tardando demasiado.';
+
+  @override
+  String get genericFailureMessage => 'Algo salió mal.';
 
   @override
   String get createMomentTooltip => 'Crear momento';
